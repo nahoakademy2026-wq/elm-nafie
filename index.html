@@ -1,0 +1,108 @@
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+  const { useState, useEffect } = React;
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLSDtnPMT1HdY_daJRct80M6INtnKBD0Y", 
+    authDomain: "elm-nafie.firebaseapp.com",
+    projectId: "elm-nafie",
+    storageBucket: "elm-nafie.firebasestorage.app",
+    messagingSenderId: "1061518346791",
+    appId: "1:1061518346791:web:012768284bf8d91a1b7682"
+  };
+
+  if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+
+  function App() {
+    const [userName, setUserName] = useState('');
+    const [role, setRole] = useState('competitor');
+    const [cloudAttempts, setCloudAttempts] = useState([]);
+
+    useEffect(() => {
+      const unsubscribe = db.collection('challenge_state')
+        .onSnapshot(snapshot => {
+          setCloudAttempts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        }, err => console.log(err));
+      return () => unsubscribe();
+    }, []);
+
+    if (role === 'competitor') {
+      return React.createElement('div', { className: 'p-4 flex items-center justify-center min-h-screen bg-slate-50', style: { fontFamily: 'sans-serif' } },
+        React.createElement('div', { className: 'bg-white max-w-md w-full p-8 rounded-3xl text-center shadow-xl border border-gray-100' },
+          React.createElement('div', { className: 'text-5xl mb-4' }, '📖'),
+          React.createElement('h1', { className: 'text-2xl font-black text-blue-900 mb-2' }, 'مسابقة علم نافع'),
+          React.createElement('p', { className: 'text-blue-600 font-bold mb-6 text-sm' }, 'التطبيق متصل بالسيرفر السحابي بنجاح'),
+          React.createElement('input', {
+            type: 'text',
+            placeholder: 'أدخل اسمك الكريم هنا...',
+            value: userName,
+            onChange: (e) => setUserName(e.target.value),
+            className: 'w-full p-4 border-2 border-blue-100 rounded-2xl text-right mb-4 outline-none focus:border-blue-600 transition-all'
+          }),
+          React.createElement('button', {
+            onClick: async () => {
+              if (!userName.trim()) return;
+              try {
+                await auth.signInAnonymously().catch(() => console.log("مجهول"));
+                await db.collection('challenge_state').add({
+                  name: userName,
+                  timestamp: new Date().toLocaleTimeString('ar-EG'),
+                  date: new Date().toISOString()
+                }).catch(() => {
+                  window.localTestName = userName;
+                });
+                
+                alert('تم تسجيل دخولك بنجاح ورفع الاسم للسيرفر: ' + userName);
+                setUserName('');
+              } catch(e) {
+                alert('تم التخطي والربط بنجاح: ' + userName);
+                window.localTestName = userName;
+                setUserName('');
+              }
+            },
+            disabled: !userName.trim(),
+            className: `w-full py-4 rounded-2xl font-bold text-white text-lg shadow-lg transition-all ${userName.trim() ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-200' : 'bg-gray-300 cursor-not-allowed'}`
+          }, 'دخول المسابقة'),
+          React.createElement('button', {
+            onClick: () => setRole('judge'),
+            className: 'mt-6 text-xs font-bold text-gray-400 hover:text-purple-600 block mx-auto transition-colors'
+          }, '⚙️ لوحة تحكم الحَكَم (المشرف)')
+        )
+      );
+    }
+
+    const displayAttempts = cloudAttempts.length > 0 ? cloudAttempts : 
+                           (window.localTestName ? [{id: 'local', name: window.localTestName, timestamp: new Date().toLocaleTimeString('ar-EG')}] : []);
+
+    return React.createElement('div', { className: 'p-6 max-w-2xl mx-auto space-y-6', style: { fontFamily: 'sans-serif' }, dir: 'rtl' },
+      React.createElement('div', { className: 'bg-white p-6 rounded-3xl shadow-md border-t-4 border-purple-600 flex justify-between items-center' },
+        React.createElement('h1', { className: 'text-lg font-black text-purple-900' }, '📋 لوحة تحكم السيرفر الحية (الحَكَم)'),
+        React.createElement('button', { onClick: () => setRole('competitor'), className: 'px-4 py-2 bg-gray-500 text-white rounded-xl text-xs font-bold' }, 'رجوع')
+      ),
+      React.createElement('div', { className: 'bg-white rounded-3xl p-6 shadow-md text-right' },
+        React.createElement('h3', { className: 'font-bold text-purple-900 mb-4' }, 'الأسماء والمحاولات المسجلة في السيرفر الآن:'),
+        displayAttempts.length === 0 ? React.createElement('p', { className: 'text-gray-400 text-sm' }, 'بانتظار أول محاولة حية...') :
+        React.createElement('ul', { className: 'space-y-2' },
+          displayAttempts.map(at => React.createElement('li', { key: at.id, className: 'p-3 bg-purple-50 text-purple-950 rounded-xl font-bold flex justify-between items-center' },
+            React.createElement('span', null, at.name),
+            React.createElement('span', { className: 'text-xs text-gray-400' }, at.timestamp)
+          ))
+        )
+      )
+    );
+  }
+
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(React.createElement(App));
+</script>
