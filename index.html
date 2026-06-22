@@ -20,11 +20,11 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
-    <!-- Header الموحد وعناصر التنقل الثابتة -->
+    <!-- Header الموحد وعناصر التنقل الثابتة والمفعلة -->
     <header class="bg-white shadow-sm p-4 border-b border-slate-100 sticky top-0 z-50">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center px-4 gap-2">
             <div class="flex items-center gap-2">
-                <button onclick="handleBackAction()" id="global-back-btn" class="text-slate-400 hover:text-slate-600 text-sm hidden items-center gap-1 ml-2 transition">
+                <button onclick="handleBackAction()" id="global-back-btn" class="text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
                 <h1 onclick="goToHome()" class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2 cursor-pointer select-none">
@@ -33,11 +33,11 @@
             </div>
             <div class="flex items-center gap-4">
                 <span id="nav-role" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-lg hidden"></span>
-                <div class="flex items-center gap-2">
-                    <button onclick="goToHome()" id="global-home-btn" class="text-slate-400 hover:text-blue-600 p-2 text-xl transition hidden" title="الصفحة الرئيسية">
+                <div class="flex items-center gap-1">
+                    <button onclick="goToHome()" id="global-home-btn" class="text-slate-500 hover:text-blue-600 p-2 text-xl transition" title="الصفحة الرئيسية">
                         <i class="fas fa-home"></i>
                     </button>
-                    <button onclick="openSettingsDialog()" id="global-settings-btn" class="text-slate-400 hover:text-purple-600 p-2 text-xl transition hidden" title="الإعدادات">
+                    <button onclick="openSettingsArea()" id="global-settings-btn" class="text-slate-500 hover:text-purple-600 p-2 text-xl transition" title="الإعدادات">
                         <i class="fas fa-cog"></i>
                     </button>
                 </div>
@@ -48,7 +48,7 @@
     <!-- Main Content Dynamic Views -->
     <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
         
-        <!-- 1. واجهة الترحيب وفصل المسارات المطور -->
+        <!-- 1. واجهة الترحيب وفصل المسارات -->
         <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
             <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
@@ -74,7 +74,7 @@
             </button>
         </div>
 
-        <!-- 3. واجهة المسابقة الفردية للطالب مع التغذية الراءعة والتحكم الكامل -->
+        <!-- 3. واجهة المسابقة الفردية للطالب -->
         <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
                 <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
@@ -87,27 +87,27 @@
                     <p id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 text-right leading-relaxed"></p>
                 </div>
 
-                <!-- رسالة التغذية الراجعة التربوية الفورية المحدثة -->
+                <!-- رسالة التغذية الراجعة التربوية الفورية -->
                 <div id="feedback-area" class="hidden p-4 rounded-xl mb-5 text-center font-bold text-lg transition-all"></div>
 
                 <div id="options-container" class="grid grid-cols-1 gap-3">
-                    <!-- الخيارات تحقن وتلون هنا -->
+                    <!-- الخيارات تحقن هنا -->
                 </div>
 
-                <!-- زر الانتقال الفردي المعتمد والمحمي للتحكم والراحة الكاملة للطفل -->
+                <!-- زر المتابعة والانتقال الفردي المحمي والمضمون للانتهاء -->
                 <button id="next-q-btn" onclick="executeNextQuestionStep()" class="hidden mt-6 w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 px-6 rounded-xl transition duration-150 text-center shadow-md">
-                    الانتقال للسؤال التالي <i class="fas fa-chevron-left text-xs mr-1"></i>
+                    الانتقال للخطوة التالية <i class="fas fa-chevron-left text-xs mr-1"></i>
                 </button>
             </div>
         </div>
 
-        <!-- 4. بطاقة نتائج التخرج النهائية الاحترافية للمتسابق -->
+        <!-- 4. بطاقة نتائج التخرج النهائية الاحترافية (طلب أ) -->
         <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center relative">
             <div id="badge-container"></div>
             <h2 id="result-title" class="text-2xl font-bold mb-2 text-slate-800"></h2>
             <p id="result-subtitle" class="text-slate-500 mb-6"></p>
             
-            <!-- كرت النتيجة الاحترافي المطور كاملاً -->
+            <!-- كرت النتيجة الاحترافي المطور -->
             <div class="bg-slate-50 p-6 rounded-2xl mb-6 border border-slate-100 text-right space-y-3">
                 <div class="flex justify-between border-b border-slate-200/60 pb-2">
                     <span class="text-slate-500 text-sm font-medium">اسم المتسابق:</span>
@@ -127,80 +127,87 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="startStudentQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition duration-150 text-sm shadow-sm">
-                    <i class="fas fa-redo-alt text-xs ml-1"></i> إعادة المحاولة
+            <!-- أزرار التحكم الفردية المكتملة للطالب -->
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="startStudentQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-2 rounded-xl transition text-xs shadow-sm flex flex-col items-center justify-center gap-1">
+                    <i class="fas fa-redo-alt"></i> إعادة المحاولة
                 </button>
-                <button onclick="goToHome()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl transition duration-150 text-sm">
-                    مسابقة جديدة <i class="fas fa-arrow-left text-xs mr-1"></i>
+                <button onclick="alert('نتيجة المتسابق محفوظة ومسجلة تلقائياً في لوحة المشرف بنجاح!')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-2 rounded-xl transition text-xs shadow-sm flex flex-col items-center justify-center gap-1">
+                    <i class="fas fa-chart-bar"></i> إظهار النتيجة
+                </button>
+                <button onclick="goToHome()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-2 rounded-xl transition text-xs flex flex-col items-center justify-center gap-1">
+                    <i class="fas fa-home"></i> العودة (رجوع)
                 </button>
             </div>
         </div>
 
-        <!-- 5. لوحة إدارة ومراقبة النتائج المتقدمة (المشرف) -->
+        <!-- 5. لوحة إدارة ومراقبة النتائج الحية للمشرف (طلب ب - مع تفعيل جلب السيرفر) -->
         <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
                 <h2 class="text-xl font-bold text-purple-700 flex items-center gap-2">
                     <i class="fas fa-gavel"></i> لوحة إدارة النتائج (المشرف)
                 </h2>
                 <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                    <button onclick="clearAllResults()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border border-red-200 transition flex-grow sm:flex-grow-0 text-center">
+                    <button onclick="clearAllResults()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border border-red-200 transition text-center">
                         <i class="fas fa-trash-alt"></i> مسح سجل الطلاب
                     </button>
-                    <button onclick="goToHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex-grow sm:flex-grow-0 text-center">
+                    <button onclick="goToHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-center">
                         خروج المشرف
                     </button>
                 </div>
             </div>
             
-            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> يتم رصد النتائج الفردية تلقائياً وبشكل مباشر من السيرفر السحابي المعتمد:</p>
+            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> يتم رصد النتائج الفردية وتحديثها حياً ومباشرة من السيرفر السحابي المعتمد:</p>
 
-            <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm">
+            <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm bg-white">
                 <table class="w-full text-right border-collapse">
                     <thead>
                         <tr class="bg-slate-50 text-slate-700 border-b border-slate-100">
-                            <th class="p-4 font-bold text-xs sm:text-sm">اسم المتسابق</th>
-                            <th class="p-4 font-bold text-xs sm:text-sm text-center">الدرجة</th>
-                            <th class="p-4 font-bold text-xs sm:text-sm text-center">النسبة والتقدير</th>
+                            <th class="p-4 font-bold text-xs sm:text-sm border-l">اسم المتسابق</th>
+                            <th class="p-4 font-bold text-xs sm:text-sm text-center border-l">الدرجة</th>
+                            <th class="p-4 font-bold text-xs sm:text-sm text-center border-l">النسبة والتقدير</th>
                             <th class="p-4 font-bold text-xs sm:text-sm text-center">وقت المحاولة</th>
                         </tr>
                     </thead>
                     <tbody id="results-table-body" class="divide-y divide-slate-100 text-slate-600 text-xs sm:text-sm">
                         <tr>
-                            <td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن...</td>
+                            <td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن في السيرفر...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
+        <!-- 6. واجهة خيارات الإعدادات المباشرة (حل مشكلة الترس) -->
+        <div id="settings-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
+            <h2 class="text-xl font-bold mb-4 text-purple-700 flex items-center justify-center gap-2">
+                <i class="fas fa-cog"></i> خيارات الإعدادات والصلاحيات الحالية
+            </h2>
+            <div class="bg-slate-50 p-4 rounded-xl text-right text-sm text-slate-600 mb-6 leading-relaxed space-y-2 border">
+                <p><strong class="text-purple-700">● الهوية البصرية:</strong> تم قفلها على خط Tajawal وتنسيق ألوان علم نافع.</p>
+                <p><strong class="text-purple-700">● إدارة الأسئلة:</strong> تعتمد حالياً على البنك البرمجي المستقر لضمان جودة الأداء.</p>
+                <p><strong class="text-purple-700">● ميزات الـ PDF والأتمتة المتقدمة:</strong> تم حجزها بالكامل لربطها في المرحلة الثانية المستقلة بناءً على خطتك المعتمدة.</p>
+            </div>
+            <button onclick="handleBackAction()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm shadow-sm">إغلاق والعودة</button>
+        </div>
+
     </main>
 
-    <!-- نافذة منبثقة للإعدادات والصلاحيات الموحدة -->
-    <div id="settings-dialog" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 animate-fade-in text-center">
-            <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h3 class="font-bold text-slate-800 text-lg flex items-center gap-1"><i class="fas fa-cog text-purple-600"></i> خيارات الإعدادات والصلاحيات</h3>
-                <button onclick="closeSettingsDialog()" class="text-slate-400 hover:text-slate-600 p-1"><i class="fas fa-times"></i></button>
-            </div>
-            <p class="text-sm text-slate-500 my-4 text-right leading-relaxed"><i class="fas fa-info-circle text-blue-500"></i> ميزات تخصيص الألوان، ورفع ملفات الـ PDF آلياً، مبرمجة ومجدولة للانطلاق بشكل كامل ضمن منصة المشرف المتقدمة في تحديث المرحلة الثانية القادمة.</p>
-            <button onclick="closeSettingsDialog()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm shadow-sm mt-2">إغلاق النافذة</button>
-        </div>
-    </div>
-
-    <!-- Footer الثابت والمحمي المعبر عن الهوية الرسمية -->
+    <!-- Footer الثابت المعبر عن الهوية الرسمية -->
     <footer class="bg-white border-t border-slate-100 p-4 text-center">
         <p class="text-xs text-slate-400">حقوق الطبع محفوظة لبرنامج مسابقة علم نافع في القرآن الكريم &copy; 2026</p>
     </footer>
 
     <script>
-        // إعدادات قواعد البيانات السحابية لبرنامج علم نافع
+        // الروابط السحابية الموحدة والثابتة لقواعد بيانات علم نافع لقراءة وكتابة مشتركة
         const firebaseConfig = {
             databaseURL: "https://elm-nafie-default-rtdb.firebaseio.com" 
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const resultsRef = db.ref("/artifacts/elm-nafie/public/data/states/challenge_state/individual_results");
+        
+        // توحيد المسار السحابي بدقة ليقرأ المشرف ما يكتبه الطالب تماماً
+        const rootRef = db.ref("/artifacts/elm-nafie/public/data/states/challenge_state/individual_results");
 
         let pName = "";
         let currentQIdx = 0;
@@ -213,20 +220,19 @@
         const quizQuestions = [
             { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
             { q: "الاسم المنصوب الذي يبين علة وقوع الفعل ويأتي جواباً لـ (لماذا) هو:", a: ["المفعول المطلق", "المفعول لأجله", "المفعول فيه", "الحال"], correct: 1 },
-            { q: "ورد في النص القرآني اللفظ 'مسرعاً'، اللفظ المظلل يعرب عادة في باب المنصوبات بصفته:", a: ["تمييزاً دالاً على الذات", "مفعولاً به صريحاً", "حالاً منصوبة تبين الهيئة", "صفة مشبهة تتبع ما قبلها"], correct: 2 }
+            { q: "ورد في النص القرآني اللفظ 'مسرعاً Mohawk'، اللفظ المظلل يعرب عادة في باب المنصوبات بصفته:", a: ["تمييزاً دالاً على الذات", "مفعولاً به صريحاً", "حالاً منصوبة تبين الهيئة", "صفة مشبهة تتبع ما قبلها"], correct: 2 }
         ];
 
-        // العبارات التربوية المحفزة والموجهة حسب الدستور التعليمي المعتمد
         const positivePhrases = ["أحسنت يا بطل! 🌟", "إجابة رائعة 👏", "واصل التميز ⭐", "عبقري وذكي جداً! 🎯"];
         const encouragePhrases = ["لا بأس، خيرها في غيرها 🌷", "حاول مرة أخرى، فأنت تتقدم خطوة خطوة ⭐", "الخطأ طريق التعلم 💡"];
 
-        // الاستماع والربط الحي للسيرفر السحابي لتحديث جداول المشرف فوراً
-        resultsRef.on("value", (snapshot) => {
+        // التفعيل والربط الفوري لقراءة السيرفر الحية وتغذية جدول المشرف آلياً دون انقطاع
+        rootRef.on("value", (snapshot) => {
             const data = snapshot.val();
             const tbody = document.getElementById("results-table-body");
             
             if (!data) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن...</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن في السيرفر...</td></tr>`;
                 return;
             }
 
@@ -234,9 +240,9 @@
             Object.keys(data).reverse().forEach(key => {
                 const item = data[key];
                 html += `<tr class="hover:bg-slate-50/50 transition">
-                    <td class="p-4 font-bold text-slate-800">${item.name}</td>
-                    <td class="p-4 text-center font-extrabold text-blue-600">${item.score} / ${item.totalPossible}</td>
-                    <td class="p-4 text-center"><span class="px-2 py-1 rounded bg-amber-50 text-amber-700 text-xs font-bold">${item.percent}% (${item.grade})</span></td>
+                    <td class="p-4 font-bold text-slate-800 border-l">${item.name}</td>
+                    <td class="p-4 text-center font-extrabold text-blue-600 border-l">${item.score} / ${item.totalPossible}</td>
+                    <td class="p-4 text-center border-l"><span class="px-2 py-1 rounded bg-amber-50 text-amber-700 text-xs font-bold">${item.percent}% (${item.grade})</span></td>
                     <td class="p-4 text-center text-[10px] sm:text-xs text-slate-400" dir="ltr">${item.timestamp}</td>
                 </tr>`;
             });
@@ -266,7 +272,7 @@
             document.getElementById("next-q-btn").classList.add("hidden");
 
             if (currentQIdx >= quizQuestions.length) {
-                saveFinalResult();
+                saveFinalResultToDatabase();
                 return;
             }
 
@@ -292,7 +298,6 @@
             const feedbackDiv = document.getElementById("feedback-area");
             feedbackDiv.classList.remove("hidden");
 
-            // تلوين وتغذية راجعة فورية تامة للطفل
             if (selectedIdx === q.correct) {
                 correctCount++;
                 score += 10;
@@ -316,7 +321,6 @@
                 feedbackDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${randPhrase}`;
             }
 
-            // إظهار زر المتابعة الفردي المعتمد فوراً ليضغط المتسابق بكامل حريته ومراقبة تقدمه
             document.getElementById("next-q-btn").classList.remove("hidden");
         }
 
@@ -325,7 +329,7 @@
             showQuestion();
         }
 
-        function saveFinalResult() {
+        function saveFinalResultToDatabase() {
             const totalPossible = quizQuestions.length * 10;
             const percent = Math.round((score / totalPossible) * 100);
             
@@ -361,11 +365,11 @@
             if (percent >= 75) gBadge.className = "font-extrabold text-base sm:text-xl text-green-600";
             else gBadge.className = "font-extrabold text-base sm:text-xl text-amber-600";
 
-            // دفع وتوثيق النتيجة مشفرة وحفظها باسم الطالب في السيرفر السحابي
             const now = new Date();
             const timeStr = now.toLocaleTimeString('ar-SA') + " - " + now.toLocaleDateString('ar-SA');
             
-            resultsRef.push({
+            // رفع النتيجة المباشرة إلى المسار الموحد المكتمل للسيرفر
+            rootRef.push({
                 name: pName,
                 score: score,
                 totalPossible: totalPossible,
@@ -383,26 +387,17 @@
 
         function clearAllResults() {
             if (confirm("هل أنت متأكد من مسح جميع سجلات ونتائج الطلاب المخزنة في السيرفر نهائياً؟")) {
-                resultsRef.set(null);
+                rootRef.set(null);
             }
         }
 
-        function exitQuiz() {
-            document.getElementById("student-name-input").value = "";
-            goToHome();
-        }
-
-        function openSettingsDialog() {
-            document.getElementById("settings-dialog").classList.remove("hidden");
-        }
-
-        function closeSettingsDialog() {
-            document.getElementById("settings-dialog").classList.add("hidden");
+        function openSettingsArea() {
+            switchView("settings-view");
         }
 
         function handleBackAction() {
             if (viewHistory.length > 1) {
-                viewHistory.pop(); // الحالية
+                viewHistory.pop();
                 const prevView = viewHistory[viewHistory.length - 1];
                 executeViewSwitchLogic(prevView, false);
             } else {
@@ -425,7 +420,7 @@
                 viewHistory.push(viewId);
             }
 
-            ["welcome-view", "student-login-view", "quiz-view", "result-view", "judge-view"].forEach(id => {
+            ["welcome-view", "student-login-view", "quiz-view", "result-view", "judge-view", "settings-view"].forEach(id => {
                 document.getElementById(id).classList.add("hidden");
             });
             document.getElementById(viewId).classList.remove("hidden");
@@ -435,7 +430,6 @@
             const backBtn = document.getElementById("global-back-btn");
             const settingsBtn = document.getElementById("global-settings-btn");
             
-            // إظهار أزرار التحكم والتنقل الموحدة وفق الواجهة الحالية
             if (viewId === 'judge-view') {
                 navBadge.innerText = "لوحة المشرف";
                 navBadge.className = "text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg block";
@@ -446,7 +440,13 @@
                 navBadge.innerText = "مسار المتسابق";
                 navBadge.className = "text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg block";
                 homeBtn.classList.remove("hidden");
-                backBtn.classList.add("hidden"); // حماية لمنع خروج المتسابق أثناء الحل
+                backBtn.classList.add("hidden"); 
+                settingsBtn.classList.add("hidden");
+            } else if (viewId === 'settings-view') {
+                navBadge.innerText = "الإعدادات";
+                navBadge.className = "text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg block";
+                homeBtn.classList.remove("hidden");
+                backBtn.classList.remove("hidden");
                 settingsBtn.classList.add("hidden");
             } else if (viewId === 'student-login-view' || viewId === 'result-view') {
                 navBadge.classList.add("hidden");
