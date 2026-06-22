@@ -17,7 +17,6 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
-    <!-- شريط التنقل العلوي الموحد والثابت لجميع الواجهات -->
     <header class="bg-white shadow-sm p-4 border-b border-slate-100 sticky top-0 z-50">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center px-4 gap-2">
             <div class="flex items-center gap-2">
@@ -42,10 +41,8 @@
         </div>
     </header>
 
-    <!-- واجهات المحتوى الأساسية الموثوقة -->
     <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
         
-        <!-- 1. واجهة الترحيب وفصل المسارات الاستراتيجية -->
         <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
             <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
@@ -61,7 +58,6 @@
             </div>
         </div>
 
-        <!-- 2. واجهة تسجيل اسم الطالب الفردي -->
         <div id="student-login-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-user-circle text-5xl text-blue-500 mb-4"></i>
             <h2 class="text-lg font-bold mb-6 text-slate-700">تسجيل اسم المتسابق الكريم</h2>
@@ -71,7 +67,6 @@
             </button>
         </div>
 
-        <!-- 3. واجهة المسابقة الفردية للطالب -->
         <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
                 <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
@@ -79,24 +74,21 @@
             </div>
             
             <div id="quiz-content">
-                <div class="bg-slate-50 p-6 rounded-xl mb-6 border border-slate-100">
+                <div class="bg-slate-50 p-6 rounded-xl mb-6 border border-slate-100 border-none">
                     <span id="question-number" class="text-xs font-bold text-blue-500 block mb-2 tracking-wide"></span>
                     <p id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 text-right leading-relaxed"></p>
                 </div>
 
-                <!-- التغذية الراجعة التربوية بالألوان والرموز التعبيرية -->
                 <div id="feedback-area" class="hidden p-4 rounded-xl mb-5 text-center font-bold text-lg transition-all"></div>
 
                 <div id="options-container" class="grid grid-cols-1 gap-3"></div>
 
-                <!-- زر المتابعة التلقائية والانتقال الخاضع للتحكم التام -->
                 <button id="next-q-btn" onclick="executeNextQuestionStep()" class="hidden mt-6 w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 px-6 rounded-xl transition text-center shadow-md">
-                    الانتقال للخطوة التالية <i class="fas fa-chevron-left text-xs mr-1"></i>
+                    <span id="next-btn-text">الانتقال للسؤال التالي</span> <i class="fas fa-chevron-left text-xs mr-1"></i>
                 </button>
             </div>
         </div>
 
-        <!-- 4. بطاقة التخرج والشهادة التكيفية المكتملة والمحررة تماماً للطالب -->
         <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <div id="badge-container"></div>
             <h2 id="result-title" class="text-2xl font-bold mb-2 text-slate-800"></h2>
@@ -121,7 +113,6 @@
                 </div>
             </div>
 
-            <!-- أزرار التحكم الثلاثية الفردية والمثبتة للوصول الفوري والرجوع -->
             <div class="grid grid-cols-3 gap-2">
                 <button onclick="startStudentQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-2 rounded-xl transition text-xs flex flex-col items-center justify-center gap-1 shadow-sm">
                     <i class="fas fa-redo-alt"></i> إعادة المحاولة
@@ -135,7 +126,6 @@
             </div>
         </div>
 
-        <!-- 5. لوحة رصد ومراقبة محاولات الطلاب الحية (المشرف) -->
         <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
                 <h2 class="text-xl font-bold text-purple-700 flex items-center gap-2">
@@ -164,13 +154,11 @@
                         </tr>
                     </thead>
                     <tbody id="results-table-body" class="divide-y divide-slate-100 text-slate-600 text-xs sm:text-sm">
-                        <!-- نتائج الطلاب تحقن هنا تلقائياً -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 6. واجهة خيارات الإعدادات والصلاحيات (الترس الداخلي) -->
         <div id="settings-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <h2 class="text-xl font-bold mb-4 text-purple-700 flex items-center justify-center gap-2">
                 <i class="fas fa-cog"></i> خيارات الإعدادات والصلاحيات
@@ -190,12 +178,9 @@
     </footer>
 
     <script>
-        // إعدادات قواعد البيانات السحابية لبرنامج علم نافع
         const firebaseConfig = { databaseURL: "https://elm-nafie-default-rtdb.firebaseio.com" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        
-        // المسار السحابي الموحد والمؤمن هندسياً للكتابة والقراءة معاً للتحكم الفوري بالنتائج
         const rootRef = db.ref("/artifacts/elm-nafie/public/data/states/challenge_state/individual_results");
 
         let pName = "";
@@ -214,16 +199,13 @@
         const positivePhrases = ["أحسنت يا بطل! 🌟", "إجابة رائعة 👏", "واصل التميز ⭐", "عبقري وذكي جداً! 🎯"];
         const encouragePhrases = ["لا بأس، خيرها في غيرها 🌷", "حاول مرة أخرى، فأنت تتقدم خطوة خطوة ⭐", "الخطأ طريق التعلم 💡"];
 
-        // ربط السيرفر وتغذية جدول المشرف حياً وتلقائياً دون انقطاع
         rootRef.on("value", (snapshot) => {
             const data = snapshot.val();
             const tbody = document.getElementById("results-table-body");
-            
             if (!data) {
                 tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن في السيرفر...</td></tr>`;
                 return;
             }
-
             let html = "";
             Object.keys(data).reverse().forEach(key => {
                 const item = data[key];
@@ -262,6 +244,13 @@
             const q = quizQuestions[currentQIdx];
             document.getElementById("question-number").innerText = `السؤال ${currentQIdx + 1} من ${quizQuestions.length}`;
             document.getElementById("question-text").innerText = q.q;
+
+            // تغيير نص الزر ديناميكياً بناءً على موقعه (ملاحظتك الذكية)
+            if (currentQIdx === quizQuestions.length - 1) {
+                document.getElementById("next-btn-text").innerText = "الانتقال لمشاهدة النتيجة 🎯";
+            } else {
+                document.getElementById("next-btn-text").innerText = "الانتقال للسؤال التالي";
+            }
 
             let html = "";
             q.a.forEach((opt, idx) => {
@@ -305,7 +294,6 @@
             document.getElementById("next-q-btn").classList.remove("hidden");
         }
 
-        // التدفق المصلح جذرياً: الفصل القاطع والتحويل الفوري للنتيجة دون انتظار تعليق الشبكة
         function executeNextQuestionStep() {
             currentQIdx++;
             if (currentQIdx >= quizQuestions.length) {
@@ -351,10 +339,8 @@
             if (percent >= 75) gBadge.className = "font-extrabold text-base sm:text-xl text-green-600";
             else gBadge.className = "font-extrabold text-base sm:text-xl text-amber-600";
 
-            // الانتقال الفوري لفك العقدة
             switchView("result-view");
 
-            // إرسال البيانات صامتاً للخلفية دون تعطيل واجهة المستخدم
             const now = new Date();
             const timeStr = now.toLocaleTimeString('ar-SA') + " - " + now.toLocaleDateString('ar-SA');
             rootRef.push({
