@@ -17,10 +17,12 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
+    <!-- شريط التنقل العلوي المحمي والموحد -->
     <header class="bg-white shadow-sm p-4 border-b border-slate-100 sticky top-0 z-50">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center px-4 gap-2">
             <div class="flex items-center gap-2">
-                <button onclick="handleBackAction()" id="global-back-btn" class="text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition">
+                <!-- أزرار تحكم تظهر فقط للمشرف وتختفي تماماً أمام المتسابق للأمان الكامل -->
+                <button onclick="handleBackAction()" id="global-back-btn" class="text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition hidden">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
                 <h1 onclick="goToHome()" class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2 cursor-pointer select-none">
@@ -30,10 +32,10 @@
             <div class="flex items-center gap-4">
                 <span id="nav-role" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-lg hidden"></span>
                 <div class="flex items-center gap-1">
-                    <button onclick="goToHome()" id="global-home-btn" class="text-slate-500 hover:text-blue-600 p-2 text-xl transition" title="الصفحة الرئيسية">
+                    <button onclick="goToHome()" id="global-home-btn" class="text-slate-500 hover:text-blue-600 p-2 text-xl transition hidden" title="الصفحة الرئيسية">
                         <i class="fas fa-home"></i>
                     </button>
-                    <button onclick="openSettingsArea()" id="global-settings-btn" class="text-slate-500 hover:text-purple-600 p-2 text-xl transition" title="الإعدادات">
+                    <button onclick="openSettingsArea()" id="global-settings-btn" class="text-slate-500 hover:text-purple-600 p-2 text-xl transition hidden" title="الإعدادات">
                         <i class="fas fa-cog"></i>
                     </button>
                 </div>
@@ -41,8 +43,10 @@
         </div>
     </header>
 
+    <!-- الواجهات الديناميكية للمسابقة -->
     <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
         
+        <!-- 1. واجهة الترحيب وفصل المسارات الاستراتيجية -->
         <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
             <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
@@ -58,6 +62,7 @@
             </div>
         </div>
 
+        <!-- 2. واجهة تسجيل اسم الطالب (محمية ومستقلة) -->
         <div id="student-login-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-user-circle text-5xl text-blue-500 mb-4"></i>
             <h2 class="text-lg font-bold mb-6 text-slate-700">تسجيل اسم المتسابق الكريم</h2>
@@ -67,6 +72,7 @@
             </button>
         </div>
 
+        <!-- 3. واجهة المسابقة الفردية للطالب -->
         <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
                 <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
@@ -84,11 +90,12 @@
                 <div id="options-container" class="grid grid-cols-1 gap-3"></div>
 
                 <button id="next-q-btn" onclick="executeNextQuestionStep()" class="hidden mt-6 w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 px-6 rounded-xl transition text-center shadow-md">
-                    <span id="next-btn-text">الانتقال للسؤال التالي</span> <i class="fas fa-chevron-left text-xs mr-1"></i>
+                    <span id="next-btn-text">Answering...</span> <i class="fas fa-chevron-left text-xs mr-1"></i>
                 </button>
             </div>
         </div>
 
+        <!-- 4. بطاقة الشهادة التكيفية مع إضافة زر المشاركة المرن (مطلب 1) -->
         <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <div id="badge-container"></div>
             <h2 id="result-title" class="text-2xl font-bold mb-2 text-slate-800"></h2>
@@ -113,19 +120,21 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-2">
-                <button onclick="startStudentQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-2 rounded-xl transition text-xs flex flex-col items-center justify-center gap-1 shadow-sm">
+            <!-- أزرار التحكم الموسعة للمتسابق بما فيها زر المشاركة والنسخ المرن -->
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <button onclick="startStudentQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm flex items-center justify-center gap-2">
                     <i class="fas fa-redo-alt"></i> إعادة المحاولة
                 </button>
-                <button onclick="alert('رحلتك مكتملة بنجاح! نتيجتك محفوظة ومسجلة في السيرفر للمشرف تلقائياً لقائمة التكريم.')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-2 rounded-xl transition text-xs flex flex-col items-center justify-center gap-1 shadow-sm">
-                    <i class="fas fa-certificate"></i> إظهار النتيجة
-                </button>
-                <button onclick="goToHome()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-2 rounded-xl transition text-xs flex flex-col items-center justify-center gap-1">
-                    <i class="fas fa-home"></i> العودة (رجوع)
+                <button onclick="copyQuizResultReport()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm flex items-center justify-center gap-2">
+                    <i class="fas fa-share-alt"></i> مشاركة النتيجة 🔗
                 </button>
             </div>
+            <button onclick="goToHome()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl transition text-sm flex items-center justify-center gap-2">
+                <i class="fas fa-home"></i> العودة للصفحة الرئيسية
+            </button>
         </div>
 
+        <!-- 5. لوحة إدارة ومراقبة النتائج المكتملة والمراجعة بالكامل للمشرف (مطلب 3) -->
         <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
                 <h2 class="text-xl font-bold text-purple-700 flex items-center gap-2">
@@ -141,7 +150,7 @@
                 </div>
             </div>
             
-            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> يتم رصد المحاولات وعرضها حياً ومباشرة من السيرفر السحابي الموحد لضمان الاستقرار الفني الكامل:</p>
+            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> رصد فوري للدرجات والتقارير من السيرفر السحابي الموحد:</p>
 
             <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm bg-white">
                 <table class="w-full text-right border-collapse">
@@ -153,22 +162,22 @@
                             <th class="p-4 font-bold text-xs sm:text-sm text-center">وقت المحاولة</th>
                         </tr>
                     </thead>
-                    <tbody id="results-table-body" class="divide-y divide-slate-100 text-slate-600 text-xs sm:text-sm">
-                        </tbody>
+                    <tbody id="results-table-body" class="divide-y divide-slate-100 text-slate-600 text-xs sm:text-sm"></tbody>
                 </table>
             </div>
         </div>
 
+        <!-- 6. واجهة الإعدادات والصلاحيات الحية للمشرف (مطلب 3) -->
         <div id="settings-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <h2 class="text-xl font-bold mb-4 text-purple-700 flex items-center justify-center gap-2">
                 <i class="fas fa-cog"></i> خيارات الإعدادات والصلاحيات
             </h2>
             <div class="bg-slate-50 p-4 rounded-xl text-right text-sm text-slate-600 mb-6 leading-relaxed space-y-2 border">
                 <p><strong class="text-purple-700">● الهوية البصرية:</strong> مقفلة وثابتة على خط Tajawal وتنسيق ألوان علم نافع.</p>
-                <p><strong class="text-purple-700">● إدارة الأسئلة المباشرة:</strong> تعتمد على بنك برمجّي آمن ومستقر 100% لضمان التدفق.</p>
-                <p><strong class="text-purple-700">● ميزات الأتمتة المتقدمة (PDF):</strong> مجدولة للانطلاق التلقائي في خطة المرحلة الثانية المستقلة.</p>
+                <p><strong class="text-purple-700">● إدارة الأسئلة الحالية:</strong> تعمل على بنك الأسئلة المبرمج والمستقر تلافياً لأي انقطاع.</p>
+                <p><strong class="text-purple-700">● ميزات الأتمتة والـ PDF:</strong> محجوزة ومبرمجة للانطلاق التلقائي في خطة المرحلة الثانية الكبرى.</p>
             </div>
-            <button onclick="handleBackAction()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm shadow-sm">إغلاق والعودة</button>
+            <button onclick="handleBackAction()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm shadow-sm">إغلاق والعودة للوحة</button>
         </div>
 
     </main>
@@ -189,6 +198,7 @@
         let correctCount = 0;
         let isAnsweringBlocked = false;
         let viewHistory = ['welcome-view'];
+        let currentAccessRole = "guest"; // 'guest', 'student', 'judge'
 
         const quizQuestions = [
             { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
@@ -228,6 +238,7 @@
             score = 0;
             correctCount = 0;
             isAnsweringBlocked = false;
+            currentAccessRole = "student"; // تثبيت دور المتسابق لعزل الصلاحيات وحمايته
 
             document.getElementById("quiz-player-name").innerText = `المتسابق: ${pName}`;
             document.getElementById("quiz-score").innerText = `الدرجة الحالية: 0`;
@@ -245,7 +256,6 @@
             document.getElementById("question-number").innerText = `السؤال ${currentQIdx + 1} من ${quizQuestions.length}`;
             document.getElementById("question-text").innerText = q.q;
 
-            // تغيير نص الزر ديناميكياً بناءً على موقعه (ملاحظتك الذكية)
             if (currentQIdx === quizQuestions.length - 1) {
                 document.getElementById("next-btn-text").innerText = "الانتقال لمشاهدة النتيجة 🎯";
             } else {
@@ -353,7 +363,23 @@
             });
         }
 
+        // دالة مشاركة ونسخ التقرير المرن للمتسابق (مطلب 1)
+        function copyQuizResultReport() {
+            const totalPossible = quizQuestions.length * 10;
+            const percent = Math.round((score / totalPossible) * 100);
+            let grade = percent >= 90 ? "ممتاز" : (percent >= 75 ? "جيد جداً" : "جيد");
+
+            const reportText = `✨ تقرير نجاح متميز من مسابقة علم نافع في القرآن الكريم ✨\n\n🥇 المتسابق: ${pName}\n✅ الإجابات الصحيحة: ${correctCount} من أصل ${quizQuestions.length}\n📊 النسبة المئوية: ${percent}%\n🏆 التقدير العام: ${grade}\n\nالحمد لله الذي بنعمته تتم الصالحات 🌟`;
+            
+            navigator.clipboard.writeText(reportText).then(() => {
+                alert("تم نسخ تقرير نجاحك بنجاح وبشكل مرن! يمكنك الآن لصقه ومشاركته فوراً مع أهلك ومعلمك عبر الواتساب أو تيليجرام 🔗");
+            }).catch(() => {
+                alert("تقرير نتيجتك: " + reportText);
+            });
+        }
+
         function switchToJudgeView() {
+            currentAccessRole = "judge"; // تثبيت دور المشرف لإظهار عناصر التحكم والترس
             switchView("judge-view");
         }
 
@@ -380,6 +406,7 @@
         function goToHome() {
             document.getElementById("student-name-input").value = "";
             viewHistory = ['welcome-view'];
+            currentAccessRole = "guest"; // تصفير الدور عند العودة
             executeViewSwitchLogic("welcome-view", false);
         }
 
@@ -387,6 +414,7 @@
             executeViewSwitchLogic(viewId, true);
         }
 
+        // دالة عزل وحماية واجهة المتسابق بالكامل عن المشرف (مطلب 2)
         function executeViewSwitchLogic(viewId, pushToHistory) {
             if (pushToHistory && viewHistory[viewHistory.length - 1] !== viewId) {
                 viewHistory.push(viewId);
@@ -402,23 +430,28 @@
             const backBtn = document.getElementById("global-back-btn");
             const settingsBtn = document.getElementById("global-settings-btn");
             
+            // جدار الأمان: إذا كان المستخدم طالباً، تحذف وتختفي أدوات الإدارة والإشراف تماماً لمنع التسريب
+            if (currentAccessRole === "student") {
+                navBadge.innerText = "مسار المتسابق الآمن";
+                navBadge.className = "text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg block";
+                homeBtn.classList.add("hidden");
+                backBtn.classList.add("hidden");
+                settingsBtn.classList.add("hidden");
+                return;
+            }
+
+            // خيارات العرض المخصصة للمشرف فقط
             if (viewId === 'judge-view') {
                 navBadge.innerText = "لوحة المشرف";
                 navBadge.className = "text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg block";
                 homeBtn.classList.remove("hidden");
                 backBtn.classList.remove("hidden");
                 settingsBtn.classList.remove("hidden");
-            } else if (viewId === 'quiz-view') {
-                navBadge.innerText = "مسار المتسابق";
-                navBadge.className = "text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg block";
-                homeBtn.classList.remove("hidden");
-                backBtn.classList.add("hidden"); 
-                settingsBtn.classList.add("hidden");
             } else if (viewId === 'settings-view') {
                 navBadge.innerText = "الإعدادات";
                 navBadge.className = "text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg block";
                 homeBtn.classList.remove("hidden");
-                backBtn.classList.remove("hidden");
+                backBtn.className = "text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition block";
                 settingsBtn.classList.add("hidden");
             } else if (viewId === 'student-login-view' || viewId === 'result-view') {
                 navBadge.classList.add("hidden");
