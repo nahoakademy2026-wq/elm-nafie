@@ -1,108 +1,260 @@
-<div id="root"></div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسابقة علم نافع</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase App and Database -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        body { font-family: 'Tajawal', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col justify-between">
 
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
+    <!-- Header -->
+    <header class="bg-white shadow-sm p-4 text-center">
+        <h1 class="text-2xl font-bold text-slate-800 flex items-center justify-center gap-2">
+            <i class="fas fa-book-open text-blue-600"></i> مسابقة علم نافع
+        </h1>
+    </header>
 
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <!-- Main Content Dynamic Areas -->
+    <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
+        
+        <!-- 1. Login View -->
+        <div id="login-view" class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md text-center">
+            <i class="fas fa-graduation-cap text-5xl text-blue-500 mb-4"></i>
+            <h2 class="text-xl font-semibold mb-6 text-slate-700">دخول المسابقة التعليمية</h2>
+            <input type="text" id="username-input" placeholder="أدخل اسمك الكريم هنا..." class="w-full p-3 border border-slate-300 rounded-xl mb-4 text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="registerUser()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200">
+                <i class="fas fa-sign-in-alt"></i> دخول التحدي
+            </button>
+        </div>
 
-<script>
-  const { useState, useEffect } = React;
+        <!-- 2. Waiting & Competition View -->
+        <div id="game-view" class="hidden bg-white p-8 rounded-2xl shadow-md w-full max-w-2xl text-center">
+            <div id="waiting-status" class="mb-6">
+                <div class="animate-spin inline-block w-8 h-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full mb-2"></div>
+                <p class="text-lg text-slate-600">بانتظار اكتمال بقية المتسابقين لبدء الأسئلة حياً...</p>
+            </div>
+            
+            <div id="quiz-area" class="hidden">
+                <div class="flex justify-between items-center mb-6 border-b pb-4">
+                    <span id="player-role-badge" class="px-4 py-1.5 rounded-full text-white font-medium text-sm"></span>
+                    <span id="live-score" class="text-slate-700 font-bold">الدرجة: 0</span>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-xl mb-6">
+                    <p id="question-text" class="text-xl font-bold text-slate-800 text-right"></p>
+                </div>
+                <div id="options-container" class="grid grid-cols-1 gap-3">
+                    <!-- Options buttons injected here -->
+                </div>
+            </div>
+        </div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDLSDtnPMT1HdY_daJRct80M6INtnKBD0Y", 
-    authDomain: "elm-nafie.firebaseapp.com",
-    projectId: "elm-nafie",
-    storageBucket: "elm-nafie.firebasestorage.app",
-    messagingSenderId: "1061518346791",
-    appId: "1:1061518346791:web:012768284bf8d91a1b7682"
-  };
+        <!-- 3. Judge Dashboard View -->
+        <div id="judge-view" class="hidden bg-white p-8 rounded-2xl shadow-md w-full max-w-3xl">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h2 class="text-xl font-bold text-purple-700"><i class="fas fa-gavel"></i> لوحة تحكم الحَكَم (المشرف)</h2>
+                <button onclick="resetCompetition()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-bold">
+                    <i class="fas fa-sync-alt"></i> إعادة تعيين المسابقة
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="p-4 rounded-xl border-2 border-blue-200 bg-blue-50/50">
+                    <h3 class="font-bold text-blue-700 mb-2">المتسابق الأول (أزرق)</h3>
+                    <p id="j-p1-name" class="text-lg font-medium text-slate-600">لم يدخل بعد...</p>
+                    <p id="j-p1-score" class="text-2xl font-bold text-slate-800 mt-1">الدرجة: 0</p>
+                </div>
+                <div class="p-4 rounded-xl border-2 border-green-200 bg-green-50/50">
+                    <h3 class="font-bold text-green-700 mb-2">المتسابق الثاني (أخضر)</h3>
+                    <p id="j-p2-name" class="text-lg font-medium text-slate-600">لم يدخل بعد...</p>
+                    <p id="j-p2-score" class="text-2xl font-bold text-slate-800 mt-1">الدرجة: 0</p>
+                </div>
+            </div>
 
-  if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-  const db = firebase.firestore();
-  const auth = firebase.auth();
+            <div class="bg-purple-50 p-4 rounded-xl border border-purple-200">
+                <h3 class="font-bold text-purple-800 mb-2"><i class="fas fa-eye"></i> مراقبة الإجابات الحية:</h3>
+                <div id="judge-logs" class="text-sm text-slate-600 space-y-1 max-h-40 overflow-y-auto">
+                    <p>بانتظار بدء التفاعل...</p>
+                </div>
+            </div>
+        </div>
 
-  function App() {
-    const [userName, setUserName] = useState('');
-    const [role, setRole] = useState('competitor');
-    const [cloudAttempts, setCloudAttempts] = useState([]);
+    </main>
 
-    useEffect(() => {
-      const unsubscribe = db.collection('challenge_state')
-        .onSnapshot(snapshot => {
-          setCloudAttempts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        }, err => console.log(err));
-      return () => unsubscribe();
-    }, []);
+    <!-- Footer with Admin Button -->
+    <footer class="bg-white border-t p-4 text-center flex flex-col sm:flex-row justify-between items-center px-8 gap-2">
+        <p class="text-sm text-slate-500">حقوق الطبع محفوظة لبرنامج علم نافع التعليمي &copy; 2026</p>
+        <button onclick="toggleJudgeMode()" class="text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center gap-1">
+            <i class="fas fa-gavel"></i> لوحة تحكم الحَكَم (المشرف)
+        </button>
+    </footer>
 
-    if (role === 'competitor') {
-      return React.createElement('div', { className: 'p-4 flex items-center justify-center min-h-screen bg-slate-50', style: { fontFamily: 'sans-serif' } },
-        React.createElement('div', { className: 'bg-white max-w-md w-full p-8 rounded-3xl text-center shadow-xl border border-gray-100' },
-          React.createElement('div', { className: 'text-5xl mb-4' }, '📖'),
-          React.createElement('h1', { className: 'text-2xl font-black text-blue-900 mb-2' }, 'مسابقة علم نافع'),
-          React.createElement('p', { className: 'text-blue-600 font-bold mb-6 text-sm' }, 'التطبيق متصل بالسيرفر السحابي بنجاح'),
-          React.createElement('input', {
-            type: 'text',
-            placeholder: 'أدخل اسمك الكريم هنا...',
-            value: userName,
-            onChange: (e) => setUserName(e.target.value),
-            className: 'w-full p-4 border-2 border-blue-100 rounded-2xl text-right mb-4 outline-none focus:border-blue-600 transition-all'
-          }),
-          React.createElement('button', {
-            onClick: async () => {
-              if (!userName.trim()) return;
-              try {
-                await auth.signInAnonymously().catch(() => console.log("مجهول"));
-                await db.collection('challenge_state').add({
-                  name: userName,
-                  timestamp: new Date().toLocaleTimeString('ar-EG'),
-                  date: new Date().toISOString()
-                }).catch(() => {
-                  window.localTestName = userName;
-                });
+    <script>
+        // الروابط السحابية المؤتمتة الخاصة ببرنامج علم نافع
+        const firebaseConfig = {
+            databaseURL: "https://elm-nafie-default-rtdb.firebaseio.com" 
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        
+        // المسار التقني المعتمد للتطبيق وحالته المشتركة
+        const stateRef = db.ref("/artifacts/elm-nafie/public/data/states/challenge_state");
+
+        let currentUser = null;
+        let currentRole = null;
+        let localState = {};
+
+        // بنك الأسئلة المعتمد للتجربة والاختبار الفوري
+        const sampleQuestions = [
+            { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال", "مفعول به", "تمييز"], correct: 0 },
+            { q: "الاسم المنصوب الذي يبين علة وقوع الفعل هو:", a: ["المفعول المطلق", "المفعول لأجله", "المفعول فيه", "الحال"], correct: 1 }
+        ];
+
+        // الاستماع الفوري والحي للسيرفر
+        stateRef.on("value", (snapshot) => {
+            const state = snapshot.val() || {};
+            localState = state;
+            updateUI(state);
+        });
+
+        function registerUser() {
+            const name = document.getElementById("username-input").value.trim();
+            if (!name) return alert("فضلاً أدخل الاسم الكريم أولاً");
+
+            currentUser = name;
+
+            stateRef.transaction((state) => {
+                if (!state) state = { p1: "", p2: "", p1_score: 0, p2_score: 0, currentQuestion: 0, logs: [] };
                 
-                alert('تم تسجيل دخولك بنجاح ورفع الاسم للسيرفر: ' + userName);
-                setUserName('');
-              } catch(e) {
-                alert('تم التخطي والربط بنجاح: ' + userName);
-                window.localTestName = userName;
-                setUserName('');
-              }
-            },
-            disabled: !userName.trim(),
-            className: `w-full py-4 rounded-2xl font-bold text-white text-lg shadow-lg transition-all ${userName.trim() ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-200' : 'bg-gray-300 cursor-not-allowed'}`
-          }, 'دخول المسابقة'),
-          React.createElement('button', {
-            onClick: () => setRole('judge'),
-            className: 'mt-6 text-xs font-bold text-gray-400 hover:text-purple-600 block mx-auto transition-colors'
-          }, '⚙️ لوحة تحكم الحَكَم (المشرف)')
-        )
-      );
-    }
+                if (!state.p1) {
+                    state.p1 = name;
+                    currentRole = "p1";
+                } else if (!state.p2 && state.p1 !== name) {
+                    state.p2 = name;
+                    currentRole = "p2";
+                } else if (state.p1 === name) {
+                    currentRole = "p1";
+                } else {
+                    currentRole = "p2";
+                }
+                return state;
+            });
+        }
 
-    const displayAttempts = cloudAttempts.length > 0 ? cloudAttempts : 
-                           (window.localTestName ? [{id: 'local', name: window.localTestName, timestamp: new Date().toLocaleTimeString('ar-EG')}] : []);
+        function updateUI(state) {
+            if (currentRole === "judge") {
+                showView("judge-view");
+                document.getElementById("j-p1-name").innerText = state.p1 || "لم يدخل بعد...";
+                document.getElementById("j-p1-score").innerText = "الدرجة: " + (state.p1_score || 0);
+                document.getElementById("j-p2-name").innerText = state.p2 || "لم يدخل بعد...";
+                document.getElementById("j-p2-score").innerText = "الدرجة: " + (state.p2_score || 0);
+                
+                const logsDiv = document.getElementById("judge-logs");
+                if (state.logs) {
+                    logsDiv.innerHTML = state.logs.map(l => `<p class='border-b border-purple-100 py-1'>${l}</p>`).join("");
+                } else {
+                    logsDiv.innerHTML = "<p>بانتظار الإجابات...</p>";
+                }
+                return;
+            }
 
-    return React.createElement('div', { className: 'p-6 max-w-2xl mx-auto space-y-6', style: { fontFamily: 'sans-serif' }, dir: 'rtl' },
-      React.createElement('div', { className: 'bg-white p-6 rounded-3xl shadow-md border-t-4 border-purple-600 flex justify-between items-center' },
-        React.createElement('h1', { className: 'text-lg font-black text-purple-900' }, '📋 لوحة تحكم السيرفر الحية (الحَكَم)'),
-        React.createElement('button', { onClick: () => setRole('competitor'), className: 'px-4 py-2 bg-gray-500 text-white rounded-xl text-xs font-bold' }, 'رجوع')
-      ),
-      React.createElement('div', { className: 'bg-white rounded-3xl p-6 shadow-md text-right' },
-        React.createElement('h3', { className: 'font-bold text-purple-900 mb-4' }, 'الأسماء والمحاولات المسجلة في السيرفر الآن:'),
-        displayAttempts.length === 0 ? React.createElement('p', { className: 'text-gray-400 text-sm' }, 'بانتظار أول محاولة حية...') :
-        React.createElement('ul', { className: 'space-y-2' },
-          displayAttempts.map(at => React.createElement('li', { key: at.id, className: 'p-3 bg-purple-50 text-purple-950 rounded-xl font-bold flex justify-between items-center' },
-            React.createElement('span', null, at.name),
-            React.createElement('span', { className: 'text-xs text-gray-400' }, at.timestamp)
-          ))
-        )
-      )
-    );
-  }
+            if (currentUser) {
+                showView("game-view");
+                if (state.p1 && state.p2) {
+                    document.getElementById("waiting-status").classList.add("hidden");
+                    document.getElementById("quiz-area").classList.remove("hidden");
+                    
+                    const badge = document.getElementById("player-role-badge");
+                    if (currentRole === "p1") {
+                        badge.innerText = `المتسابق: ${state.p1} (أزرق)`;
+                        badge.className = "px-4 py-1.5 rounded-full text-white font-medium text-sm bg-blue-600";
+                        document.getElementById("live-score").innerText = "الدرجة: " + (state.p1_score || 0);
+                    } else {
+                        badge.innerText = `المتسابق: ${state.p2} (أخضر)`;
+                        badge.className = "px-4 py-1.5 rounded-full text-white font-medium text-sm bg-green-600";
+                        document.getElementById("live-score").innerText = "الدرجة: " + (state.p2_score || 0);
+                    }
 
-  const root = ReactDOM.createRoot(document.getElementById('root'));
-  root.render(React.createElement(App));
-</script>
+                    renderQuestion(state.currentQuestion || 0);
+                } else {
+                    document.getElementById("waiting-status").classList.remove("hidden");
+                    document.getElementById("quiz-area").classList.add("hidden");
+                }
+            } else {
+                showView("login-view");
+            }
+        }
+
+        function renderQuestion(idx) {
+            if (idx >= sampleQuestions.length) {
+                document.getElementById("question-text").innerText = "تهانينا! انتهت المسابقة التعليمية بنجاح.";
+                document.getElementById("options-container").innerHTML = "<p class='text-slate-500 font-medium py-4 text-center'>انتظر قرار الحَكَم والنتيجة النهائية</p>";
+                return;
+            }
+            const q = sampleQuestions[idx];
+            document.getElementById("question-text").innerText = q.q;
+            
+            let html = "";
+            q.a.forEach((opt, oIdx) => {
+                html += `<button onclick="submitAnswer(${oIdx})" class="w-full text-right p-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition font-medium text-slate-700 flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold">${oIdx + 1}</span> ${opt}
+                </button>`;
+            });
+            document.getElementById("options-container").innerHTML = html;
+        }
+
+        function submitAnswer(optIdx) {
+            stateRef.transaction((state) => {
+                if (!state) return state;
+                const currQ = state.currentQuestion || 0;
+                if (currQ >= sampleQuestions.length) return state;
+
+                const isCorrect = sampleQuestions[currQ].correct === optIdx;
+                const points = isCorrect ? 10 : 0;
+                const pName = currentRole === "p1" ? state.p1 : state.p2;
+
+                if (currentRole === "p1") {
+                    state.p1_score = (state.p1_score || 0) + points;
+                } else {
+                    state.p2_score = (state.p2_score || 0) + points;
+                }
+
+                if (!state.logs) state.logs = [];
+                state.logs.unshift(`أجاب [${pName}] بـ: (${sampleQuestions[currQ].a[optIdx]}) - ${isCorrect ? '✅ صح' : '❌ خطأ'}`);
+
+                // ننتقل للسؤال التالي تلقائياً إذا أجاب الطرف الحالي
+                state.currentQuestion = currQ + 1;
+                return state;
+            });
+        }
+
+        function toggleJudgeMode() {
+            currentRole = currentRole === "judge" ? null : "judge";
+            stateRef.once("value", (snap) => updateUI(snap.val() || {}));
+        }
+
+        function resetCompetition() {
+            stateRef.set({ p1: "", p2: "", p1_score: 0, p2_score: 0, currentQuestion: 0, logs: ["تم إعادة تعيين المسابقة بواسطة المشرف."] });
+            currentUser = null;
+            currentRole = null;
+        }
+
+        function showView(viewId) {
+            ["login-view", "game-view", "judge-view"].forEach(id => {
+                document.getElementById(id).classList.add("hidden");
+            });
+            document.getElementById(viewId).classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
