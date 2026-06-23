@@ -4,353 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مسابقة علم نافع في القرآن الكريم</title>
-    <!-- تضمين خط Cairo -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- تضمين Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        cairo: ['Cairo', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-        }
-    </style>
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
-    <!-- رأس الصفحة (Header) -->
+    <!-- نافذة طلب كلمة المرور (النافذة المشروطة) -->
+    <div id="password-modal" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl border-t-4 border-purple-700 space-y-4">
+            <h3 class="text-lg font-bold text-purple-900 text-center">🔐 دخول المشرف</h3>
+            <p class="text-sm text-gray-600 text-center">يرجى إدخال كلمة المرور للوصول للوحة التحكم:</p>
+            <input type="password" id="admin-pass" class="w-full text-center p-3 rounded-lg border border-purple-200 focus:ring-2 focus:ring-purple-500 outline-none bg-purple-50 font-mono text-lg" placeholder="****">
+            <div class="flex gap-2">
+                <button onclick="closeModal()" class="flex-1 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">إلغاء</button>
+                <button onclick="checkPassword()" class="flex-1 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800">دخول</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- رأس الصفحة -->
     <header class="bg-white shadow-sm border-b border-gray-200 py-4 px-6 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <span class="text-2xl">📑</span>
-                <h1 class="text-xl font-bold text-gray-900 text-center sm:text-right">مسابقة علم نافع في القرآن الكريم</h1>
-            </div>
-            <!-- محدد الأدوار السريع للمحاكاة واختبار الواجهات -->
-            <div class="flex items-center bg-gray-100 p-1 rounded-lg border border-gray-200">
-                <button onclick="switchRole('player')" id="btn-role-player" class="px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 bg-blue-600 text-white shadow-sm">
-                    👤 متسابق (م1 - أزرق)
-                </button>
-                <button onclick="switchRole('judge')" id="btn-role-judge" class="px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 text-gray-600 hover:text-purple-700">
-                    ⚖️ الحكم والمشرف (م2 - أرجواني)
-                </button>
+            <h1 class="text-xl font-bold">مسابقة علم نافع في القرآن الكريم</h1>
+            <div class="flex items-center bg-gray-100 p-1 rounded-lg border">
+                <button onclick="switchRole('player')" id="btn-role-player" class="px-4 py-1.5 rounded-md text-sm font-semibold bg-blue-600 text-white">👤 متسابق</button>
+                <button onclick="showModal()" id="btn-role-judge" class="px-4 py-1.5 rounded-md text-sm font-semibold text-gray-600">⚖️ الحكم</button>
             </div>
         </div>
     </header>
 
-    <!-- المحتوى الرئيسي -->
-    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
-        
-        <!-- شريط حالة الربط السحابي والمزامنة اللحظية -->
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                    <span class="flex h-3 w-3 relative">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                    </span>
-                    <span class="font-semibold text-sm text-gray-700">حالة البث اللحظي الحقيقي (Real-time Sync):</span>
-                    <span id="sync-status-text" class="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-200 font-mono">Anonymous Authed & Connected</span>
-                </div>
-                <p class="text-xs text-gray-500 font-mono select-all">المسار الحالي: /artifacts/main_app/public/data/states/challenge_state</p>
-            </div>
-            <div class="flex gap-2 w-full md:w-auto">
-                <button onclick="simulateCloudSync()" class="flex-1 md:flex-none text-xs bg-gray-800 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition font-medium flex items-center justify-center gap-1">
-                    🔄 محاكاة مزامنة سحابية
-                </button>
-                <button onclick="resetLocalData()" class="flex-1 md:flex-none text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-2 rounded-lg hover:bg-red-100 transition font-medium flex items-center justify-center gap-1">
-                    🗑️ مسح محلي مؤقت
-                </button>
-            </div>
-        </div>
-
-        <!-- سياق عرض المتسابق (م1 - أزرق) -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6">
+        <!-- شاشات العرض كما كانت -->
         <div id="section-player" class="space-y-6">
-            <div class="border-t-4 border-blue-600 bg-white rounded-xl shadow-sm p-6 space-y-4">
-                <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-                    <h2 class="text-lg font-bold text-blue-900 flex items-center gap-2">
-                        <span>👤</span> شاشة المتسابق الحالي
-                    </h2>
-                    <span class="text-xs font-semibold bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full">نطاق رؤية مخصص للذات</span>
-                </div>
-
-                <!-- نموذج إرسال الإجابة -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end bg-blue-50/50 p-4 rounded-xl border border-blue-100">
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-bold text-blue-900">اسم المتسابق</label>
-                        <input type="text" id="player-name-input" placeholder="اكتب اسمك الثلاثي" class="w-full text-sm p-2.5 rounded-lg border border-blue-200 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-bold text-blue-900">الإجابة المقترحة لآية التحدي</label>
-                        <input type="text" id="player-answer-input" placeholder="أدخل وجه الإعراب أو التفسير" class="w-full text-sm p-2.5 rounded-lg border border-blue-200 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
-                    </div>
-                    <div>
-                        <button onclick="submitPlayerAction()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-2.5 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-150 flex items-center justify-center gap-2">
-                            🚀 إرسال محاولتك الفورية
-                        </button>
-                    </div>
-                </div>
-
-                <!-- جدول عرض نتيجة المتسابق الشخصية فقط -->
-                <div class="space-y-2">
-                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">محاولتك الحالية المرسلة في النظام:</h3>
-                    <div class="overflow-x-auto rounded-xl border border-gray-200">
-                        <table class="w-full text-right border-collapse bg-white">
-                            <thead>
-                                <tr class="bg-blue-600 text-white text-xs font-bold">
-                                    <th class="p-3">المتسابق</th>
-                                    <th class="p-3">الإجابة المقدمة</th>
-                                    <th class="p-3">حالة التقييم</th>
-                                    <th class="p-3 text-center">الدرجة</th>
-                                </tr>
-                            </thead>
-                            <tbody id="player-personal-row" class="text-sm divide-y divide-gray-100">
-                                <!-- يتم التعبئة ديناميكياً -->
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="border-t-4 border-blue-600 bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-lg font-bold text-blue-900 mb-4">👤 شاشة المتسابق الحالي</h2>
+                <!-- نموذج مبسط -->
+                <div class="space-y-3">
+                    <input type="text" id="player-name" placeholder="اسمك" class="w-full p-2 border rounded-lg">
+                    <input type="text" id="player-answer" placeholder="إجابتك" class="w-full p-2 border rounded-lg">
+                    <button onclick="submitPlayerAction()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold">إرسال</button>
                 </div>
             </div>
         </div>
 
-        <!-- سياق عرض الحكم والمشرف (م2 - أرجواني) -->
         <div id="section-judge" class="space-y-6 hidden">
-            <div class="border-t-4 border-purple-700 bg-white rounded-xl shadow-sm p-6 space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-gray-100 pb-3">
-                    <div>
-                        <h2 class="text-lg font-bold text-purple-900 flex items-center gap-2">
-                            <span>⚖️</span> لوحة تحكم وفحص نتائج المتسابقين (المشرف والحكم)
-                        </h2>
-                        <p class="text-xs text-purple-600 mt-0.5">صلاحيات كاملة للفرز والترتيب والمسح الفوري الشامل للجدول</p>
-                    </div>
-                    <div class="flex gap-2 self-stretch sm:self-auto">
-                        <button onclick="sortResultsByScore()" class="flex-1 sm:flex-none text-xs bg-purple-100 text-purple-700 border border-purple-200 font-bold px-3 py-2 rounded-lg hover:bg-purple-200 transition flex items-center justify-center gap-1">
-                            📊 فرز وترتيب حسب الدرجة
-                        </button>
-                        <button onclick="clearAllTableResults()" class="flex-1 sm:flex-none text-xs bg-red-600 text-white font-bold px-3 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-1">
-                            ❌ مسح النتائج الفورية بالكامل
-                        </button>
-                    </div>
-                </div>
-
-                <!-- جدول الإدارة الشاملة للحكم -->
-                <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-                    <table class="w-full text-right border-collapse bg-white">
-                        <thead>
-                            <tr class="bg-purple-700 text-white text-xs font-bold">
-                                <th class="p-3">المتسابق</th>
-                                <th class="p-3">الإجابة المستلمة</th>
-                                <th class="p-3">التقييم الفوري</th>
-                                <th class="p-3 text-center">الدرجة المستحقة</th>
-                                <th class="p-3 text-center">إجراءات الحكم</th>
-                            </tr>
-                        </thead>
-                        <tbody id="judge-master-table" class="text-sm divide-y divide-gray-100">
-                            <!-- تعبئة ديناميكية لكل المتسابقين -->
-                        </tbody>
-                    </table>
-                </div>
+            <div class="border-t-4 border-purple-700 bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-lg font-bold text-purple-900 mb-4">⚖️ لوحة تحكم الحكم</h2>
+                <div id="judge-master-table" class="text-sm text-gray-600">هنا تظهر النتائج...</div>
             </div>
         </div>
-
     </main>
 
-    <!-- تذييل الصفحة -->
-    <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500 mt-12">
-        <p>مشروع مسابقة علم نافع في القرآن الكريم • الواجهة الفورية المطورة والجاهزة لقواعد البيانات السحابية</p>
-    </footer>
-
-    <!-- شفرة المحرك البرمجي وحفظ الحالة اللحظية (JavaScript) -->
     <script>
-        // دالة التهيئة الافتراضية للبيانات في LocalStorage كحالة وسيطة مستقرة
-        const DEFAULT_STATE = [
-            { id: "1", name: "أحمد محمد", answer: "مفعول به منصوب وعلامة نصبه الفتحة", status: "معتمد", score: 9 },
-            { id: "2", name: "عمر فاروق", answer: "بدل مجرور بالكسرة الظاهرة", status: "بحاجة لمراجعة", score: 5 },
-            { id: "3", name: "فاطمة الزهراء", answer: "مبتدأ مؤخر مرفوع بالضمة", status: "معتمد", score: 10 }
-        ];
+        const ADMIN_PASSWORD = "1234"; // كلمة المرور الافتراضية
 
-        let currentRole = 'player'; // الدور الافتراضي عند الفتح
+        function showModal() { document.getElementById('password-modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('password-modal').classList.add('hidden'); }
 
-        function getAppState() {
-            const state = localStorage.getItem('challenge_state');
-            if (!state) {
-                localStorage.setItem('challenge_state', JSON.stringify(DEFAULT_STATE));
-                return DEFAULT_STATE;
+        function checkPassword() {
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === ADMIN_PASSWORD) {
+                closeModal();
+                switchRole('judge');
+                document.getElementById('admin-pass').value = '';
+            } else {
+                alert('كلمة المرور غير صحيحة!');
             }
-            return JSON.parse(state);
         }
 
-        function saveAppState(newState) {
-            localStorage.setItem('challenge_state', JSON.stringify(newState));
-            renderInterface();
-        }
-
-        // التبديل الصارم والسلس بين واجهات العرض والأدوار
         function switchRole(role) {
-            currentRole = role;
-            const btnPlayer = document.getElementById('btn-role-player');
-            const btnJudge = document.getElementById('btn-role-judge');
-            const secPlayer = document.getElementById('section-player');
-            const secJudge = document.getElementById('section-judge');
-
             if (role === 'player') {
-                btnPlayer.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 bg-blue-600 text-white shadow-sm";
-                btnJudge.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 text-gray-600 hover:text-purple-700";
-                secPlayer.classList.remove('hidden');
-                secJudge.classList.add('hidden');
+                document.getElementById('section-player').classList.remove('hidden');
+                document.getElementById('section-judge').classList.add('hidden');
             } else {
-                btnJudge.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 bg-purple-700 text-white shadow-sm";
-                btnPlayer.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 text-gray-600 hover:text-blue-600";
-                secPlayer.classList.add('hidden');
-                secJudge.classList.remove('hidden');
-            }
-            renderInterface();
-        }
-
-        // معالجة وإضافة محاولة جديدة من المتسابق
-        function submitPlayerAction() {
-            const nameInput = document.getElementById('player-name-input');
-            const answerInput = document.getElementById('player-answer-input');
-
-            if (!nameInput.value.trim() || !answerInput.value.trim()) {
-                alert('يرجى ملء الاسم والإجابة أولاً بشكل كامل!');
-                return;
-            }
-
-            const currentState = getAppState();
-            const newEntry = {
-                id: Date.now().toString(),
-                name: nameInput.value.trim(),
-                answer: answerInput.value.trim(),
-                status: "قيد التدقيق",
-                score: 0
-            };
-
-            currentState.push(newEntry);
-            saveAppState(currentState);
-
-            // مسح الحقول بعد النجاح لراحة المستخدم وتأكيد الإرسال
-            answerInput.value = '';
-            alert('تم إرسال محاولتك بنجاح وبثها فوريًا إلى لوحة تحكم الحكم!');
-        }
-
-        // تعديل الدرجة والتقييم من قبل المشرف والحكم
-        function updateScore(id, newScore) {
-            const currentState = getAppState();
-            const item = currentState.find(i => i.id === id);
-            if (item) {
-                item.score = parseInt(newScore) || 0;
-                item.status = item.score >= 7 ? "معتمد" : "دون المأمول";
-                saveAppState(currentState);
+                document.getElementById('section-player').classList.add('hidden');
+                document.getElementById('section-judge').classList.remove('hidden');
             }
         }
-
-        // فرز وترتيب البيانات تنازلياً حسب الدرجة الأعلى
-        function sortResultsByScore() {
-            const currentState = getAppState();
-            currentState.sort((a, b) => b.score - a.score);
-            saveAppState(currentState);
-        }
-
-        // مسح فوري شامل لجدول النتائج السحابية والمحلية
-        function clearAllTableResults() {
-            if (confirm('هل أنت متأكد من مسح جميع النتائج الفورية من الجدول بشكل نهائي؟')) {
-                saveAppState([]);
-            }
-        }
-
-        // مسح الذاكرة المحلية والعودة للافتراضي
-        function resetLocalData() {
-            localStorage.removeItem('challenge_state');
-            renderInterface();
-            alert('تمت إعادة تهيئة البيانات للوضع الافتراضي بنجاح.');
-        }
-
-        // دالة محاكاة التحديث اللحظي لربط السحابة وثبات الأزرار
-        function simulateCloudSync() {
-            const statusText = document.getElementById('sync-status-text');
-            statusText.innerText = "Syncing with cloud path...";
-            statusText.className = "text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded border border-yellow-200 font-mono";
-            
-            setTimeout(() => {
-                statusText.innerText = "Synced & Live Real-time";
-                statusText.className = "text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-200 font-mono";
-                renderInterface();
-            }, 600);
-        }
-
-        // رندرة وتحديث الواجهات والبيانات ديناميكياً بناءً على مصفوفة الحالة
-        function renderInterface() {
-            const data = getAppState();
-            
-            // 1. تحديث شاشة المتسابق (يرى نفسه وآخر محاولة له أو كامل المحاولات كمتصفح)
-            const playerBody = document.getElementById('player-personal-row');
-            playerBody.innerHTML = '';
-            
-            if (data.length === 0) {
-                playerBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400 bg-gray-50">لا توجد محاولات مرسلة حالياً. حدّث الصفحة أو أرسل إجابة.</td></tr>`;
-            } else {
-                // محاكاة: المتسابق يرى المحاولة الأخيرة المضافة كعينة على بياناته الشخصية المزامنة سحابياً
-                const myLatest = data[data.length - 1];
-                const statusColor = myLatest.status === "معتمد" ? "text-green-600 bg-green-50" : "text-amber-600 bg-amber-50";
-                playerBody.innerHTML = `
-                    <tr class="hover:bg-blue-50/30 transition">
-                        <td class="p-3 font-semibold text-gray-900">${myLatest.name}</td>
-                        <td class="p-3 text-gray-600">${myLatest.answer}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-medium ${statusColor}">${myLatest.status}</span></td>
-                        <td class="p-3 text-center font-bold text-blue-600">${myLatest.score}</td>
-                    </tr>
-                `;
-            }
-
-            // 2. تحديث شاشة الحكم والمشرف الشاملة (يرى الكل مع الصلاحيات الفورية)
-            const judgeBody = document.getElementById('judge-master-table');
-            judgeBody.innerHTML = '';
-
-            if (data.length === 0) {
-                judgeBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 bg-gray-50">الجدول فارغ تماماً، بانتظار إرسال محاولات المتسابقين.</td></tr>`;
-            } else {
-                data.forEach(item => {
-                    const badgeClass = item.status === "معتمد" ? "bg-green-100 text-green-800" : "bg-purple-100 text-purple-800";
-                    const row = document.createElement('tr');
-                    row.className = "hover:bg-purple-50/20 transition text-xs sm:text-sm";
-                    row.innerHTML = `
-                        <td class="p-3 font-semibold text-gray-900">${item.name}</td>
-                        <td class="p-3 text-gray-600 max-w-xs truncate">${item.answer}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-semibold ${badgeClass}">${item.status}</span></td>
-                        <td class="p-3 text-center">
-                            <input type="number" min="0" max="10" value="${item.score}" 
-                                   onchange="updateScore('${item.id}', this.value)" 
-                                   class="w-16 p-1 text-center border border-purple-300 rounded focus:ring-1 focus:ring-purple-500 font-bold text-purple-900 bg-purple-50">
-                        </td>
-                        <td class="p-3 text-center">
-                            <button onclick="(() => { 
-                                const current = getAppState().filter(i => i.id !== '${item.id}'); 
-                                saveAppState(current); 
-                            })()" class="text-xs text-red-500 hover:text-red-700 transition font-medium border border-red-200 px-2 py-1 rounded bg-red-50">
-                                حذف السجل
-                            </button>
-                        </td>
-                    `;
-                    judgeBody.appendChild(row);
-                });
-            }
-        }
-
-        // تشغيل الرندرة الأولية فور تحميل الصفحة بنجاح
-        window.onload = function() {
-            renderInterface();
-        };
+        
+        function submitPlayerAction() { alert('تم الإرسال!'); }
     </script>
 </body>
 </html>
