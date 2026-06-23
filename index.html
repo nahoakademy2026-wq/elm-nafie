@@ -192,7 +192,7 @@
         const quizQuestions = [
             { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
             { q: "الاسم المنصوب الذي يبين علة وقوع الفعل ويأتي جواباً لـ (لماذا) هو:", a: ["المفعول المطلق", "المفعول لأجله", "المفعول فيه", "الحال"], correct: 1 },
-            { q: "ورد في النص القرآني اللفظ 'مسرعاً Mohawk'، اللفظ المظلل يعرب عادة في باب المنصوبات بصفته:", a: ["تمييزاً دالاً على الذات", "مفعولاً به صريحاً", "حالاً منصوبة تبين الهيئة", "صفة مشبهة تتبع ما قبلها"], correct: 2 }
+            { q: "ورد في النص القرآني اللفظ 'مسرعاً'، اللفظ المظلل يعرب عادة في باب المنصوبات بصفته:", a: ["تمييزاً دالاً على الذات", "مفعولاً به صريحاً", "حالاً منصوبة تبين الهيئة", "صفة مشبهة تتبع ما قبلها"], correct: 2 }
         ];
 
         const positivePhrases = ["أحسنت يا بطل! 🌟", "إجابة رائعة 👏", "واصل التميز ⭐", "عبقري وذكي جداً! 🎯"];
@@ -221,12 +221,15 @@
         function startStudentQuiz() {
             const nameInput = document.getElementById("student-name-input").value.trim();
             if (!nameInput) return alert("فضلاً أدخل اسمك الكريم أولاً للانضمام للمسابقة");
+            
+            // تصفير وتنظيف كامل للمتغيرات العامة لمنع تداخل قيم الطلاب السابقين حركياً
             pName = nameInput;
             currentQIdx = 0;
             score = 0;
             correctCount = 0;
             isAnsweringBlocked = false;
             currentAccessRole = "student";
+
             document.getElementById("quiz-player-name").innerText = `المتسابق: ${pName}`;
             document.getElementById("quiz-score").innerText = `الدرجة الحالية: 0`;
             switchView("quiz-view");
@@ -299,7 +302,7 @@
             const percent = Math.round((score / totalPossible) * 100);
             
             let grade = "تحتاج محاولة";
-            let iconHtml = `<i class="fas fa-medal text-6xl text-slate-400 mb-4 animate-bounce"></i>`;
+            let iconHtml = `<i class="fas fa-heart text-6xl text-rose-400 mb-4 animate-bounce"></i>`; // أيقونة تربوية مشجعة عوضاً عن الكأس عند المحاولة
             let title = "بداية جيدة، واصل التعلم 🌷";
             let subtitle = "الاجتهاد طريق التعلم، حاول مجدداً لتتقدم وتكسب الخبرة.";
 
@@ -341,19 +344,21 @@
             });
         }
 
-        // تحويل وتخصيص نص تقرير الواتساب التكيفي مع استبدال كلمة الخطأ بالاجتهاد (مطلب أساسي)
+        // الحساب اللحظي المباشر والأيقونات التكيفية المتطابقة ميكانيكياً لمنع تراكم الذاكرة (حل الصورة النهائي)
         function copyQuizResultReport() {
-            const totalPossible = quizQuestions.length * 10;
-            const percent = Math.round((score / totalPossible) * 100);
+            const cardPercentText = document.getElementById("res-card-percent").innerText;
+            const percent = parseInt(cardPercentText) || 0;
+            const cardName = document.getElementById("res-card-name").innerText;
+            const cardCount = document.getElementById("res-card-count").innerText;
             
             let reportText = "";
             
             if (percent >= 90) {
-                reportText = `🏆 تقرير نجاح متميز من مسابقة علم نافع في القرآن الكريم 🏆\n\n🥇 المتسابق: ${pName}\n✅ الإجابات الصحيحة: ${correctCount} من أصل ${quizQuestions.length}\n📊 النسبة المئوية: ${percent}%\n⭐ التقدير العام: ممتاز\n\n💬 الحمد لله الذي بنعمته تتم الصالحات.. أحسنت يا بطل! 🌟`;
+                reportText = `🏆 تقرير نجاح متميز من مسابقة علم نافع في القرآن الكريم 🏆\n\n🏅 المتسابق: ${cardName}\n✅ الإجابات الصحيحة: ${cardCount}\n📊 النسبة المئوية: ${percent}%\n🌟 التقدير العام: ممتاز\n\n💬 الحمد لله الذي بنعمته تتم الصالحات.. أحسنت يا بطل! 🌟`;
             } else if (percent >= 50) {
-                reportText = `✨ تقرير مشاركة من مسابقة علم نافع في القرآن الكريم ✨\n\n👤 المتسابق: ${pName}\n✅ الإجابات الصحيحة: ${correctCount} من أصل ${quizQuestions.length}\n📊 النسبة المئوية: ${percent}%\n📈 التقدير العام: جيد\n\n💬 جهد رائع وطيب.. واصل التدرب لتصل للقمة! 👏`;
+                reportText = `✨ تقرير مشاركة من مسابقة علم نافع في القرآن الكريم ✨\n\n👤 المتسابق: ${cardName}\n✅ الإجابات الصحيحة: ${cardCount}\n📊 النسبة المئوية: ${percent}%\n📈 التقدير العام: جيد\n\n💬 جهد رائع وطيب.. واصل التدرب لتصل للقمة! 👏`;
             } else {
-                reportText = `📚 تقرير محاولة من مسابقة علم نافع في القرآن الكريم 📚\n\n👤 المتسابق: ${pName}\n✅ الإجابات الصحيحة: ${correctCount} من أصل ${quizQuestions.length}\n📊 النسبة المئوية: ${percent}%\n📝 التقدير العام: تحتاج محاولة\n\n💬 بداية جيدة.. الاجتهاد طريق التعلم، حاول مجدداً لتتقدم! 💡`;
+                reportText = `📚 تقرير محاولة من مسابقة علم نافع في القرآن الكريم 📚\n\n👤 المتسابق: ${cardName}\n✅ الإجابات الصحيحة: ${cardCount}\n📊 النسبة المئوية: ${percent}%\n📝 التقدير العام: تحتاج محاولة\n\n💬 بداية جيدة.. الاجتهاد طريق التعلم، حاول مجدداً لتتقدم! 💡`;
             }
             
             navigator.clipboard.writeText(reportText).then(() => {
