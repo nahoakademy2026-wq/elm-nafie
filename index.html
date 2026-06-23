@@ -4,354 +4,252 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مسابقة علم نافع في القرآن الكريم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Cairo', sans-serif; }
-        [x-cloak] { display: none !important; }
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght=400;500;700&display=swap');
+        body { font-family: 'Tajawal', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between"
-      x-data="quizApp()" x-init="initFirebase()">
+<body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
-    <header class="bg-white shadow-sm border-b border-slate-100 py-4 px-6 flex items-center justify-between">
-        <div class="flex items-center gap-2 mx-auto">
-            <span class="text-2xl text-blue-600">📕</span>
-            <h1 class="text-xl font-bold text-slate-800">مسابقة علم نافع في القرآن الكريم</h1>
+    <header class="bg-white shadow-sm p-4 border-b border-slate-100">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <h1 onclick="goToHome()" class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2 cursor-pointer select-none">
+                <i class="fas fa-book-open text-blue-600"></i> مسابقة علم نافع في القرآن الكريم
+            </h1>
+            <span id="nav-role" class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg hidden">مسار المتسابق</span>
         </div>
     </header>
 
-    <main class="flex-grow flex items-center justify-center p-4">
-
-        <div x-show="currentScreen === 'main'" class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 max-w-md w-full text-center space-y-6">
-            <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto shadow-inner">
-                <span class="text-4xl text-blue-600">🎓</span>
-            </div>
-            <div class="space-y-2">
-                <h2 class="text-2xl font-bold text-slate-800">مرحباً بكم في منصة علم نافع</h2>
-                <p class="text-slate-500 text-sm">يرجى اختيار مسار الدخول لبدء التحدي القرآني</p>
-            </div>
-            <div class="space-y-3 pt-2">
-                <button @click="currentScreen = 'student_login'" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-md">
-                    <span>👤</span> دخول المتسابق (الطالب)
-                </button>
-                <button @click="passwordInput = ''; authError = ''; currentScreen = 'admin_auth'" class="w-full bg-purple-50 text-purple-700 hover:bg-purple-100 font-semibold py-3.5 px-6 rounded-xl border border-purple-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-md">
-                    <span>🔒</span> دخول المشرف (يتطلب رقم سري)
-                </button>
-            </div>
-        </div>
-
-        <div x-show="currentScreen === 'student_login'" class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 max-w-md w-full text-center space-y-6" x-cloak>
-            <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto">
-                <span class="text-3xl text-blue-500">✍️</span>
-            </div>
-            <h3 class="text-xl font-bold text-slate-800">تسجيل اسم المتسابق الكريم</h3>
+    <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
+        
+        <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
+            <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
+            <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
+            <p class="text-sm text-slate-500 mb-8">يرجى اختيار مسار الدخول لبدء التحدي</p>
             <div class="space-y-4">
-                <input type="text" x-model="studentName" placeholder="أدخل اسمك الثلاثي هنا..." class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-center focus:outline-none focus:border-blue-500 text-lg text-slate-700">
-                <div class="flex gap-3">
-                    <button @click="if(studentName.trim()) { currentScreen = 'quiz'; }" :disabled="!studentName.trim()" :class="studentName.trim() ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md' : 'bg-slate-100 text-slate-400 cursor-not-allowed'" class="flex-grow font-semibold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2">
-                        بدء الاختبار الآن ◀
-                    </button>
-                    <button @click="currentScreen = 'main'" class="bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 rounded-xl font-semibold">إلغاء</button>
-                </div>
+                <button onclick="directSwitch('student-login-view')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-sm">
+                    <i class="fas fa-user-edit"></i> دخول المتسابق (الطالب)
+                </button>
+                <button onclick="openJudgePanel()" class="w-full bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold py-3.5 px-6 rounded-xl transition border border-purple-200">
+                    <i class="fas fa-gavel"></i> دخول المشرف (بدون رمز سري مؤقتاً) 🔒
+                </button>
             </div>
         </div>
 
-        <div x-show="currentScreen === 'quiz'" class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 max-w-2xl w-full space-y-6" x-cloak>
-            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div class="bg-amber-50 text-amber-700 font-semibold px-4 py-1.5 rounded-full text-sm border border-amber-200">
-                    الدرجة الحالية: <span x-text="score"></span>
-                </div>
-                <div class="bg-blue-50 text-blue-700 font-semibold px-4 py-1.5 rounded-full text-sm">
-                    المتسابق: <span class="font-bold" x-text="studentName"></span>
-                </div>
-            </div>
+        <div id="student-login-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
+            <i class="fas fa-user-circle text-5xl text-blue-500 mb-4"></i>
+            <h2 class="text-lg font-bold mb-6 text-slate-700">تسجيل اسم المتسابق الكريم</h2>
+            <input type="text" id="student-name-input" placeholder="أدخل اسمك الثلاثي هنا..." class="w-full p-3 border border-slate-200 rounded-xl mb-4 text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="startStudentQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-md">
+                بدء الاختبار الآن <i class="fas fa-play text-xs mr-1"></i>
+            </button>
+        </div>
 
-            <div class="space-y-1">
-                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">
-                    السؤال <span x-text="currentQuestionIndex + 1"></span> من <span x-text="questions.length"></span>
-                </span>
-                <h3 class="text-xl font-bold text-slate-800 pt-2 leading-relaxed" x-text="questions[currentQuestionIndex].question"></h3>
+        <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
+                <span id="quiz-score" class="text-amber-700 font-bold bg-amber-50 px-4 py-1.5 rounded-full text-sm">الدرجة الحالية: 0</span>
             </div>
-
-            <div class="grid grid-cols-1 gap-3 pt-2">
-                <template x-for="(option, index) in questions[currentQuestionIndex].options" :key="index">
-                    <button @click="if(selectedOption === null) handleOptionClick(index)" :disabled="selectedOption !== null"
-                            :class="selectedOption !== null ? (index === questions[currentQuestionIndex].correctAnswer ? 'bg-green-50 border-green-500 text-green-700 font-semibold ring-2 ring-green-100' : (index === selectedOption ? 'bg-red-50 border-red-400 text-red-700 ring-2 ring-red-100' : 'opacity-60 border-slate-200 text-slate-400')) : 'border-slate-200 hover:bg-slate-50 hover:border-blue-300 text-slate-700'"
-                            class="w-full text-right p-4 rounded-xl border-2 transition-all flex items-center justify-between group">
-                        <span class="text-base font-medium" x-text="option"></span>
-                        <span class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-400" x-text="index + 1"></span>
-                    </button>
-                </template>
+            <div id="quiz-content">
+                <div class="bg-slate-50 p-6 rounded-xl mb-6">
+                    <span id="question-number" class="text-xs font-bold text-blue-500 block mb-2"></span>
+                    <p id="question-text" class="text-lg font-bold text-slate-800 text-right leading-relaxed"></p>
+                </div>
+                <div id="feedback-area" class="hidden p-4 rounded-xl mb-5 text-center font-bold text-lg"></div>
+                <div id="options-container" class="grid grid-cols-1 gap-3"></div>
+                <button id="next-q-btn" onclick="executeNextQuestionStep()" class="hidden mt-6 w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 px-6 rounded-xl transition text-center shadow-md">
+                    <span id="next-btn-text">الانتقال للخطوة التالية</span> <i class="fas fa-chevron-left text-xs mr-1"></i>
+                </button>
             </div>
         </div>
 
-        <div x-show="currentScreen === 'result'" class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 max-w-md w-full text-center space-y-6" x-cloak>
-            <div class="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto border border-amber-200">
-                <span class="text-4xl">🏆</span>
-            </div>
-            <h3 class="text-2xl font-bold text-slate-800">اكتمل الاختبار بنجاح!</h3>
+        <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
+            <div id="badge-container"><i class="fas fa-trophy text-6xl text-amber-500 mb-4 block"></i></div>
+            <h2 class="text-2xl font-bold mb-2 text-slate-800">اكتمل الاختبار بنجاح!</h2>
+            <p class="text-slate-500 mb-6">تهانينا على إتمام محاولة المسابقة</p>
             
-            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 text-right space-y-3">
-                <div class="flex justify-between items-center border-b pb-2">
+            <div class="bg-slate-50 p-6 rounded-2xl mb-6 border border-slate-100 text-right space-y-3">
+                <div class="flex justify-between">
                     <span class="text-slate-500 text-sm">اسم المتسابق:</span>
-                    <span class="font-bold text-slate-800" x-text="studentName"></span>
+                    <span id="res-card-name" class="font-bold text-slate-800"></span>
                 </div>
-                <div class="flex justify-between items-center border-b pb-2">
-                    <span class="text-slate-500 text-sm">الدرجة الرقمية:</span>
-                    <span class="font-bold text-blue-600 text-lg" x-text="score + ' / ' + totalPoints"></span>
+                <div class="flex justify-between">
+                    <span class="text-slate-500 text-sm">الدرجة النهائية:</span>
+                    <span id="res-card-score" class="font-bold text-blue-600 text-lg"></span>
                 </div>
-                <div class="flex justify-between items-center border-b pb-2">
-                    <span class="text-slate-500 text-sm">النسبة المئوية:</span>
-                    <span class="font-bold text-emerald-600" x-text="resultDetails.percentage + '%'"></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-slate-500 text-sm">التقدير العام:</span>
-                    <span class="font-bold bg-blue-100 text-blue-800 px-3 py-0.5 rounded-full text-xs" x-text="resultDetails.grade + ' ' + resultDetails.emoji"></span>
-                </div>
-                <div class="pt-2 text-center text-xs bg-white p-2.5 rounded-lg border text-slate-600 font-semibold leading-relaxed" x-text="resultDetails.feedback"></div>
             </div>
 
-            <div class="grid grid-cols-1 gap-2.5 pt-2">
-                <button @click="saveResult" :class="saveStatus ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500'" class="w-full font-semibold py-3 px-5 rounded-xl transition-all flex items-center justify-center border shadow-sm">
-                    <span x-text="saveStatus ? '✅ تم تثبيت وحفظ النتيجة في السيرفر' : '💾 حفظ وتثبيت النتيجة الآن'"></span>
-                </button>
-                <button @click="shareResult" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-xl transition-all flex items-center justify-center border border-blue-500 shadow-sm">
-                    <span x-text="shareSuccess ? '📋 تم نسخ نص النتيجة بنجاح!' : '🔗 مشاركة النتيجة مع الآخرين'"></span>
-                </button>
-                <button @click="retryQuiz" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-5 rounded-xl transition-all flex items-center justify-center border border-amber-400 shadow-sm">
-                    <span>🔄 إعادة المحاولة والتحدي</span>
-                </button>
-                <button @click="studentName = ''; currentScreen = 'main'" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-5 rounded-xl transition-all flex items-center justify-center border border-slate-200">
-                    <span>🏠 العودة إلى الصفحة الرئيسية</span>
-                </button>
-            </div>
+            <button onclick="saveResultLocallyAndInstantly()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-base shadow-md mb-4 flex items-center justify-center gap-2">
+                <i class="fas fa-check-circle"></i> تثبيت وحفظ النتيجة في الحال 💾
+            </button>
+
+            <button onclick="goToHome()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl transition text-sm">
+                العودة للرئيسية
+            </button>
         </div>
 
-        <div x-show="currentScreen === 'admin_auth'" class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 max-w-md w-full text-center space-y-5" x-cloak>
-            <div class="w-14 h-14 bg-purple-50 rounded-full flex items-center justify-center mx-auto text-2xl text-purple-600">🔒</div>
-            <div class="space-y-1">
-                <h3 class="text-xl font-bold text-slate-800">بوابة حماية المشرفين</h3>
-                <p class="text-slate-400 text-xs">منع أي دخول عشوائي للوحة التحكم</p>
+        <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h2 class="text-xl font-bold text-purple-700"><i class="fas fa-gavel"></i> لوحة رصد النتائج (المشرف)</h2>
+                <button onclick="goToHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold transition">خروج</button>
             </div>
-            <form @submit.prevent="adminLogin" class="space-y-4">
-                <input type="password" x-model="passwordInput" placeholder="أدخل رمز المرور المعتمد..." class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-center focus:outline-none focus:border-purple-500 text-lg tracking-widest">
-                <p x-show="authError" x-text="authError" class="text-red-500 text-xs font-semibold" x-cloak></p>
-                <div class="flex gap-2">
-                    <button type="submit" class="flex-grow bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-md">تأكيد ودخول</button>
-                    <button type="button" @click="currentScreen = 'main'" class="bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 rounded-xl font-semibold">إلغاء</button>
-                </div>
-            </form>
-        </div>
-
-        <div x-show="currentScreen === 'admin_dashboard'" class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 max-w-4xl w-full space-y-6" x-cloak>
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b pb-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 font-bold">⚖️</div>
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-800">لوحة رصد النتائج وقائمة التحكم الحية</h3>
-                        <p class="text-xs text-purple-600 font-semibold">• الصلاحية الفنية: مشرف رئيسي (بث حي نشط 📡)</p>
-                    </div>
-                </div>
-                <button @click="currentScreen = 'main'" class="bg-red-50 hover:bg-red-100 text-red-600 px-5 py-2 rounded-xl font-semibold text-sm border border-red-200 flex items-center gap-1">
-                    <span>🚪</span> خروج آمن
-                </button>
-            </div>
-
-            <div class="overflow-x-auto border border-slate-100 rounded-xl">
+            <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm">
                 <table class="w-full text-right border-collapse">
                     <thead>
-                        <tr class="bg-slate-50 border-b">
-                            <th @click="sortResults" class="p-4 text-slate-600 text-sm font-semibold cursor-pointer hover:bg-slate-100 select-none transition-colors">
-                                اسم المتسابق <span class="text-xs text-blue-500" x-text="sortOrder === 'desc' ? '(فرز: الأعلى ⬇️)' : '(فرز: الأقل ⬆️)'"></span>
+                        <tr class="bg-slate-50 text-slate-700 border-b">
+                            <th onclick="toggleSort()" class="p-4 font-bold text-sm cursor-pointer hover:bg-slate-100 transition select-none">
+                                اسم المتسابق (اضغط هنا لفرز الترتيب 👆)
                             </th>
-                            <th class="p-4 text-slate-600 text-sm font-semibold text-center">الدرجة المكتسبة</th>
-                            <th class="p-4 text-slate-600 text-sm font-semibold text-center">النسبة والتقدير</th>
-                            <th class="p-4 text-slate-600 text-sm font-semibold text-center">الوقت والتاريخ</th>
+                            <th class="p-4 font-bold text-sm text-center">الدرجة</th>
+                            <th class="p-4 font-bold text-sm text-center">الوقت والتاريخ</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <template x-for="result in savedResults" :key="result.id">
-                            <tr class="border-b hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 font-bold text-slate-800 flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                    <span x-text="result.name"></span>
-                                </td>
-                                <td class="p-4 text-center font-semibold text-blue-600 text-base" x-text="result.score + ' / ' + result.maxScore"></td>
-                                <td class="p-4 text-center">
-                                    <div class="inline-flex flex-col items-center">
-                                        <span class="text-xs font-bold text-emerald-600" x-text="result.percentage + '%'"></span>
-                                        <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full mt-0.5" x-text="result.grade"></span>
-                                    </div>
-                                </td>
-                                <td class="p-4 text-center text-xs text-slate-500" x-text="result.timestamp" dir="ltr"></td>
-                            </tr>
-                        </template>
-                        <template x-if="savedResults.length === 0">
-                            <tr>
-                                <td colspan="4" class="text-center p-8 text-slate-400 text-sm">لا توجد نتائج مسجلة حتى الآن في البث الحي...</td>
-                            </tr>
-                        </template>
-                    </tbody>
+                    <tbody id="results-table-body" class="divide-y divide-slate-100 text-sm">
+                        </tbody>
                 </table>
             </div>
         </div>
 
     </main>
 
-    <footer class="bg-white border-t border-slate-100 py-3 text-center text-xs text-slate-400">
-        حقوق الطبع محفوظة لمسابقة علم نافع © 2026
+    <footer class="bg-white border-t border-slate-100 p-4 text-center">
+        <p class="text-xs text-slate-400">حقوق الطبع محفوظة لمسابقة علم نافع &copy; 2026</p>
     </footer>
 
     <script>
-        function quizApp() {
-            return {
-                currentScreen: 'main',
-                studentName: '',
-                currentQuestionIndex: 0,
-                score: 0,
-                selectedOption: null,
-                passwordInput: '',
-                authError: '',
-                sortOrder: 'desc',
-                saveStatus: false,
-                shareSuccess: false,
-                database: null,
-                
-                // الأسئلة مع رصد نقاط ودرجة محددة لكل سؤال
-                questions: [
-                    { id: 1, question: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", options: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correctAnswer: 0, points: 10 },
-                    { id: 2, question: "ما علامة رفع الأسماء الخمسة في النحو العربي؟", options: ["الضمة الظاهرة", "الواو", "الألف", "ثبوت النون"], correctAnswer: 1, points: 10 }
-                ],
-                
-                savedResults: [],
+        let studentName = "";
+        let currentQIdx = 0;
+        let quizScore = 0;
+        let isAnsweringBlocked = false;
+        let studentsList = [];
 
-                get totalPoints() { 
-                    return this.questions.reduce((acc, q) => acc + q.points, 0); 
-                },
+        const quizQuestions = [
+            { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
+            { q: "الاسم المنصوب الذي يبين علة وقوع الفعل ويأتي جواباً لـ (لماذا) هو:", a: ["المفعول المطلق", "المفعول لأجله", "المفعول فيه", "الحال"], correct: 1 }
+        ];
 
-                // حساب التقديرات والنسب المئوية تلقائياً لإعادتها لبطاقة النتيجة
-                get resultDetails() {
-                    let percentage = Math.round((this.score / this.totalPoints) * 100);
-                    if (percentage >= 90) return { percentage, grade: 'امتياز', feedback: 'ما شاء الله! تبارك الرحمن، فتح الله عليك ونفع بك القرآن الكريم.', emoji: '👑✨' };
-                    if (percentage >= 80) return { percentage, grade: 'جيد جداً', feedback: 'أحسنت جداً! أداء متميز وقريب من الصدارة العالية.', emoji: '⭐' };
-                    return { percentage, grade: 'جيد', feedback: 'أداء طيب ومبارك، استمر في ترسيخ وتطوير مهاراتك النحوية.', emoji: '📚' };
-                },
+        function startStudentQuiz() {
+            const input = document.getElementById("student-name-input").value.trim();
+            if (!input) return alert("الرجاء إدخال اسمك الكريم أولاً");
+            studentName = input;
+            currentQIdx = 0;
+            quizScore = 0;
+            document.getElementById("quiz-player-name").innerText = `المتسابق: ${studentName}`;
+            directSwitch("quiz-view");
+            showQuestion();
+        }
 
-                // تهيئة وإعداد اتصال Firebase التلقائي في الخلفية
-                initFirebase() {
-                    // إعدادات Firebase الافتراضية الجاهزة للاستبدال ببيانات مشروعك الحقيقي
-                    const firebaseConfig = {
-                        apiKey: "YOUR_API_KEY",
-                        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-                        databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-                        projectId: "YOUR_PROJECT_ID",
-                        storageBucket: "YOUR_PROJECT_ID.appspot.com",
-                        messagingSenderId: "YOUR_SENDER_ID",
-                        appId: "YOUR_APP_ID"
-                    };
+        function showQuestion() {
+            isAnsweringBlocked = false;
+            document.getElementById("feedback-area").classList.add("hidden");
+            document.getElementById("next-q-btn").classList.add("hidden");
+            const q = quizQuestions[currentQIdx];
+            document.getElementById("question-number").innerText = `السؤال ${currentQIdx + 1} من ${quizQuestions.length}`;
+            document.getElementById("question-text").innerText = q.q;
 
-                    // الحماية من إعادة التهيئة لمنع أي تعارض برمي
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(firebaseConfig);
-                    }
-                    this.database = firebase.database();
-
-                    // الاستماع اللحظي التلقائي (Real-time Listener) لجلب وتحديث لوحة النتائج حياً
-                    this.database.ref('challenge_state/results').on('value', (snapshot) => {
-                        const data = snapshot.val();
-                        const list = [];
-                        if (data) {
-                            Object.keys(data).forEach(key => {
-                                list.push({ id: key, ...data[key] });
-                            });
-                        }
-                        this.savedResults = list;
-                        this.sortData();
-                    });
-                },
-
-                handleOptionClick(index) {
-                    this.selectedOption = index;
-                    if (index === this.questions[this.currentQuestionIndex].correctAnswer) {
-                        this.score += this.questions[this.currentQuestionIndex].points;
-                    }
-                    setTimeout(() => {
-                        if (this.currentQuestionIndex + 1 < this.questions.length) {
-                            this.currentQuestionIndex++;
-                            this.selectedOption = null;
-                        } else {
-                            this.currentScreen = 'result';
-                        }
-                    }, 600);
-                },
-
-                // دالة حفظ النتيجة الحية وإرسالها فورياً إلى Firebase Real-time
-                saveResult() {
-                    if (this.saveStatus) return;
-                    let now = new Date();
-                    let formattedTime = now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG');
-                    
-                    let resultPayload = {
-                        name: this.studentName || 'متسابق مجهول',
-                        score: this.score,
-                        maxScore: this.totalPoints,
-                        percentage: this.resultDetails.percentage,
-                        grade: this.resultDetails.grade,
-                        timestamp: formattedTime
-                    };
-
-                    this.database.ref('challenge_state/results').push(resultPayload)
-                        .then(() => {
-                            this.saveStatus = true;
-                        })
-                        .catch((error) => {
-                            console.error("خطأ في حفظ البيانات سحابياً:", error);
-                        });
-                },
-
-                // دالة مشاركة النتيجة المكتملة عبر الحافظة (Clipboard)
-                shareResult() {
-                    let text = `📕 مسابقة علم نافع في القرآن الكريم 📕\n\nالمتسابق: ${this.studentName}\nالدرجة: ${this.score} من ${this.totalPoints}\nالنسبة: ${this.resultDetails.percentage}%\nالتقدير: ${this.resultDetails.grade} ${this.resultDetails.emoji}\n\nنفع الله بنا وبكم القرآن الكريم ✨`;
-                    navigator.clipboard.writeText(text);
-                    this.shareSuccess = true;
-                    setTimeout(() => this.shareSuccess = false, 2500);
-                },
-
-                retryQuiz() {
-                    this.currentQuestionIndex = 0;
-                    this.selectedOption = null;
-                    this.score = 0;
-                    this.saveStatus = false;
-                    this.currentScreen = 'quiz';
-                },
-
-                adminLogin() {
-                    if (this.passwordInput === '2026') {
-                        this.authError = '';
-                        this.currentScreen = 'admin_dashboard';
-                    } else {
-                        this.authError = 'الرمز السري غير صحيح، يرجى إعادة المحاولة.';
-                    }
-                },
-
-                sortResults() {
-                    this.sortOrder = this.sortOrder === 'desc' ? 'asc' : 'desc';
-                    this.sortData();
-                },
-
-                sortData() {
-                    this.savedResults.sort((a, b) => {
-                        return this.sortOrder === 'desc' ? b.score - a.score : a.score - b.score;
-                    });
-                }
+            if (currentQIdx === quizQuestions.length - 1) {
+                document.getElementById("next-btn-text").innerText = "إنهاء ورؤية النتيجة";
+            } else {
+                document.getElementById("next-btn-text").innerText = "السؤال التالي";
             }
+
+            let html = "";
+            q.a.forEach((opt, idx) => {
+                html += `<button onclick="handleAnswer(${idx})" class="w-full text-right p-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold">${idx + 1}</span>
+                    <span>${opt}</span>
+                </button>`;
+            });
+            document.getElementById("options-container").innerHTML = html;
+        }
+
+        function handleAnswer(idx) {
+            if (isAnsweringBlocked) return;
+            isAnsweringBlocked = true;
+            const q = quizQuestions[currentQIdx];
+            const feedback = document.getElementById("feedback-area");
+            feedback.classList.remove("hidden");
+
+            if (idx === q.correct) {
+                quizScore += 10;
+                document.getElementById("quiz-score").innerText = `الدرجة الحالية: ${quizScore}`;
+                feedback.className = "p-4 rounded-xl mb-4 text-center font-bold bg-green-100 text-green-700";
+                feedback.innerText = "إجابة صحيحة وممتازة! 🌟";
+            } else {
+                feedback.className = "p-4 rounded-xl mb-4 text-center font-bold bg-red-100 text-red-700";
+                feedback.innerText = "إجابة خاطئة، بالتوفيق في السؤال القادم 🌷";
+            }
+            document.getElementById("next-q-btn").classList.remove("hidden");
+        }
+
+        function executeNextQuestionStep() {
+            currentQIdx++;
+            if (currentQIdx >= quizQuestions.length) {
+                document.getElementById("res-card-name").innerText = studentName;
+                document.getElementById("res-card-score").innerText = `${quizScore} / ${quizQuestions.length * 10}`;
+                directSwitch("result-view");
+            } else {
+                showQuestion();
+            }
+        }
+
+        // الحفظ الفوري المطلق بدون أي انتظار لسيرفر معلق
+        function saveResultLocallyAndInstantly() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('ar-SA') + " - " + now.toLocaleDateString('ar-SA');
+            
+            const record = { name: studentName, score: quizScore, time: timeStr };
+            
+            let currentData = localStorage.getItem("elm_nafie_clean_data") ? JSON.parse(localStorage.getItem("elm_nafie_clean_data")) : [];
+            currentData.push(record);
+            localStorage.setItem("elm_nafie_clean_data", JSON.stringify(currentData));
+            
+            alert("تم التثبيت والحفظ الفوري بنجاح تام! لن يعلق الزر بعد الآن ✅");
+            openJudgePanel();
+        }
+
+        function openJudgePanel() {
+            studentsList = localStorage.getItem("elm_nafie_clean_data") ? JSON.parse(localStorage.getItem("elm_nafie_clean_data")) : [];
+            renderTable();
+            directSwitch("judge-view");
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("results-table-body");
+            if (studentsList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400">لا توجد سجلات محفوظة حالياً.</td></tr>`;
+                return;
+            }
+            let html = "";
+            studentsList.forEach(item => {
+                html += `<tr class="hover:bg-slate-50 transition">
+                    <td class="p-4 font-bold text-slate-800">${item.name}</td>
+                    <td class="p-4 text-center text-blue-600 font-bold">${item.score}</td>
+                    <td class="p-4 text-center text-slate-400 text-xs">${item.time}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        let asc = true;
+        function toggleSort() {
+            asc = !asc;
+            studentsList.sort((a, b) => asc ? a.name.localeCompare(b.name, 'ar') : b.name.localeCompare(a.name, 'ar'));
+            renderTable();
+        }
+
+        function goToHome() {
+            document.getElementById("student-name-input").value = "";
+            directSwitch("welcome-view");
+        }
+
+        function directSwitch(viewId) {
+            ["welcome-view", "student-login-view", "quiz-view", "result-view", "judge-view"].forEach(id => {
+                document.getElementById(id).classList.add("hidden");
+            });
+            document.getElementById(viewId).classList.remove("hidden");
         }
     </script>
 </body>
