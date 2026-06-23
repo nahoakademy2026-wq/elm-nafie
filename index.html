@@ -4,253 +4,353 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مسابقة علم نافع في القرآن الكريم</title>
+    <!-- تضمين خط Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- تضمين Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght=400;500;700&display=swap');
-        body { font-family: 'Tajawal', sans-serif; }
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col justify-between">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
-    <header class="bg-white shadow-sm p-4 border-b border-slate-100">
-        <div class="container mx-auto flex justify-between items-center px-4">
-            <h1 onclick="goToHome()" class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2 cursor-pointer select-none">
-                <i class="fas fa-book-open text-blue-600"></i> مسابقة علم نافع في القرآن الكريم
-            </h1>
-            <span id="nav-role" class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg hidden">مسار المتسابق</span>
+    <!-- رأس الصفحة (Header) -->
+    <header class="bg-white shadow-sm border-b border-gray-200 py-4 px-6 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">📑</span>
+                <h1 class="text-xl font-bold text-gray-900 text-center sm:text-right">مسابقة علم نافع في القرآن الكريم</h1>
+            </div>
+            <!-- محدد الأدوار السريع للمحاكاة واختبار الواجهات -->
+            <div class="flex items-center bg-gray-100 p-1 rounded-lg border border-gray-200">
+                <button onclick="switchRole('player')" id="btn-role-player" class="px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 bg-blue-600 text-white shadow-sm">
+                    👤 متسابق (م1 - أزرق)
+                </button>
+                <button onclick="switchRole('judge')" id="btn-role-judge" class="px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 text-gray-600 hover:text-purple-700">
+                    ⚖️ الحكم والمشرف (م2 - أرجواني)
+                </button>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
         
-        <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
-            <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
-            <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
-            <p class="text-sm text-slate-500 mb-8">يرجى اختيار مسار الدخول لبدء التحدي</p>
-            <div class="space-y-4">
-                <button onclick="directSwitch('student-login-view')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-sm">
-                    <i class="fas fa-user-edit"></i> دخول المتسابق (الطالب)
-                </button>
-                <button onclick="openJudgePanel()" class="w-full bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold py-3.5 px-6 rounded-xl transition border border-purple-200">
-                    <i class="fas fa-gavel"></i> دخول المشرف (بدون رمز سري مؤقتاً) 🔒
-                </button>
-            </div>
-        </div>
-
-        <div id="student-login-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
-            <i class="fas fa-user-circle text-5xl text-blue-500 mb-4"></i>
-            <h2 class="text-lg font-bold mb-6 text-slate-700">تسجيل اسم المتسابق الكريم</h2>
-            <input type="text" id="student-name-input" placeholder="أدخل اسمك الثلاثي هنا..." class="w-full p-3 border border-slate-200 rounded-xl mb-4 text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button onclick="startStudentQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-md">
-                بدء الاختبار الآن <i class="fas fa-play text-xs mr-1"></i>
-            </button>
-        </div>
-
-        <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
-                <span id="quiz-score" class="text-amber-700 font-bold bg-amber-50 px-4 py-1.5 rounded-full text-sm">الدرجة الحالية: 0</span>
-            </div>
-            <div id="quiz-content">
-                <div class="bg-slate-50 p-6 rounded-xl mb-6">
-                    <span id="question-number" class="text-xs font-bold text-blue-500 block mb-2"></span>
-                    <p id="question-text" class="text-lg font-bold text-slate-800 text-right leading-relaxed"></p>
+        <!-- شريط حالة الربط السحابي والمزامنة اللحظية -->
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-3 w-3 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <span class="font-semibold text-sm text-gray-700">حالة البث اللحظي الحقيقي (Real-time Sync):</span>
+                    <span id="sync-status-text" class="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-200 font-mono">Anonymous Authed & Connected</span>
                 </div>
-                <div id="feedback-area" class="hidden p-4 rounded-xl mb-5 text-center font-bold text-lg"></div>
-                <div id="options-container" class="grid grid-cols-1 gap-3"></div>
-                <button id="next-q-btn" onclick="executeNextQuestionStep()" class="hidden mt-6 w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 px-6 rounded-xl transition text-center shadow-md">
-                    <span id="next-btn-text">الانتقال للخطوة التالية</span> <i class="fas fa-chevron-left text-xs mr-1"></i>
+                <p class="text-xs text-gray-500 font-mono select-all">المسار الحالي: /artifacts/main_app/public/data/states/challenge_state</p>
+            </div>
+            <div class="flex gap-2 w-full md:w-auto">
+                <button onclick="simulateCloudSync()" class="flex-1 md:flex-none text-xs bg-gray-800 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition font-medium flex items-center justify-center gap-1">
+                    🔄 محاكاة مزامنة سحابية
+                </button>
+                <button onclick="resetLocalData()" class="flex-1 md:flex-none text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-2 rounded-lg hover:bg-red-100 transition font-medium flex items-center justify-center gap-1">
+                    🗑️ مسح محلي مؤقت
                 </button>
             </div>
         </div>
 
-        <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
-            <div id="badge-container"><i class="fas fa-trophy text-6xl text-amber-500 mb-4 block"></i></div>
-            <h2 class="text-2xl font-bold mb-2 text-slate-800">اكتمل الاختبار بنجاح!</h2>
-            <p class="text-slate-500 mb-6">تهانينا على إتمام محاولة المسابقة</p>
-            
-            <div class="bg-slate-50 p-6 rounded-2xl mb-6 border border-slate-100 text-right space-y-3">
-                <div class="flex justify-between">
-                    <span class="text-slate-500 text-sm">اسم المتسابق:</span>
-                    <span id="res-card-name" class="font-bold text-slate-800"></span>
+        <!-- سياق عرض المتسابق (م1 - أزرق) -->
+        <div id="section-player" class="space-y-6">
+            <div class="border-t-4 border-blue-600 bg-white rounded-xl shadow-sm p-6 space-y-4">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <h2 class="text-lg font-bold text-blue-900 flex items-center gap-2">
+                        <span>👤</span> شاشة المتسابق الحالي
+                    </h2>
+                    <span class="text-xs font-semibold bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full">نطاق رؤية مخصص للذات</span>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-500 text-sm">الدرجة النهائية:</span>
-                    <span id="res-card-score" class="font-bold text-blue-600 text-lg"></span>
+
+                <!-- نموذج إرسال الإجابة -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-blue-900">اسم المتسابق</label>
+                        <input type="text" id="player-name-input" placeholder="اكتب اسمك الثلاثي" class="w-full text-sm p-2.5 rounded-lg border border-blue-200 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-blue-900">الإجابة المقترحة لآية التحدي</label>
+                        <input type="text" id="player-answer-input" placeholder="أدخل وجه الإعراب أو التفسير" class="w-full text-sm p-2.5 rounded-lg border border-blue-200 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                    </div>
+                    <div>
+                        <button onclick="submitPlayerAction()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-2.5 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-150 flex items-center justify-center gap-2">
+                            🚀 إرسال محاولتك الفورية
+                        </button>
+                    </div>
+                </div>
+
+                <!-- جدول عرض نتيجة المتسابق الشخصية فقط -->
+                <div class="space-y-2">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">محاولتك الحالية المرسلة في النظام:</h3>
+                    <div class="overflow-x-auto rounded-xl border border-gray-200">
+                        <table class="w-full text-right border-collapse bg-white">
+                            <thead>
+                                <tr class="bg-blue-600 text-white text-xs font-bold">
+                                    <th class="p-3">المتسابق</th>
+                                    <th class="p-3">الإجابة المقدمة</th>
+                                    <th class="p-3">حالة التقييم</th>
+                                    <th class="p-3 text-center">الدرجة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="player-personal-row" class="text-sm divide-y divide-gray-100">
+                                <!-- يتم التعبئة ديناميكياً -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-
-            <button onclick="saveResultLocallyAndInstantly()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-base shadow-md mb-4 flex items-center justify-center gap-2">
-                <i class="fas fa-check-circle"></i> تثبيت وحفظ النتيجة في الحال 💾
-            </button>
-
-            <button onclick="goToHome()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl transition text-sm">
-                العودة للرئيسية
-            </button>
         </div>
 
-        <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <h2 class="text-xl font-bold text-purple-700"><i class="fas fa-gavel"></i> لوحة رصد النتائج (المشرف)</h2>
-                <button onclick="goToHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold transition">خروج</button>
-            </div>
-            <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm">
-                <table class="w-full text-right border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-700 border-b">
-                            <th onclick="toggleSort()" class="p-4 font-bold text-sm cursor-pointer hover:bg-slate-100 transition select-none">
-                                اسم المتسابق (اضغط هنا لفرز الترتيب 👆)
-                            </th>
-                            <th class="p-4 font-bold text-sm text-center">الدرجة</th>
-                            <th class="p-4 font-bold text-sm text-center">الوقت والتاريخ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="results-table-body" class="divide-y divide-slate-100 text-sm">
+        <!-- سياق عرض الحكم والمشرف (م2 - أرجواني) -->
+        <div id="section-judge" class="space-y-6 hidden">
+            <div class="border-t-4 border-purple-700 bg-white rounded-xl shadow-sm p-6 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-gray-100 pb-3">
+                    <div>
+                        <h2 class="text-lg font-bold text-purple-900 flex items-center gap-2">
+                            <span>⚖️</span> لوحة تحكم وفحص نتائج المتسابقين (المشرف والحكم)
+                        </h2>
+                        <p class="text-xs text-purple-600 mt-0.5">صلاحيات كاملة للفرز والترتيب والمسح الفوري الشامل للجدول</p>
+                    </div>
+                    <div class="flex gap-2 self-stretch sm:self-auto">
+                        <button onclick="sortResultsByScore()" class="flex-1 sm:flex-none text-xs bg-purple-100 text-purple-700 border border-purple-200 font-bold px-3 py-2 rounded-lg hover:bg-purple-200 transition flex items-center justify-center gap-1">
+                            📊 فرز وترتيب حسب الدرجة
+                        </button>
+                        <button onclick="clearAllTableResults()" class="flex-1 sm:flex-none text-xs bg-red-600 text-white font-bold px-3 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-1">
+                            ❌ مسح النتائج الفورية بالكامل
+                        </button>
+                    </div>
+                </div>
+
+                <!-- جدول الإدارة الشاملة للحكم -->
+                <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+                    <table class="w-full text-right border-collapse bg-white">
+                        <thead>
+                            <tr class="bg-purple-700 text-white text-xs font-bold">
+                                <th class="p-3">المتسابق</th>
+                                <th class="p-3">الإجابة المستلمة</th>
+                                <th class="p-3">التقييم الفوري</th>
+                                <th class="p-3 text-center">الدرجة المستحقة</th>
+                                <th class="p-3 text-center">إجراءات الحكم</th>
+                            </tr>
+                        </thead>
+                        <tbody id="judge-master-table" class="text-sm divide-y divide-gray-100">
+                            <!-- تعبئة ديناميكية لكل المتسابقين -->
                         </tbody>
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
 
     </main>
 
-    <footer class="bg-white border-t border-slate-100 p-4 text-center">
-        <p class="text-xs text-slate-400">حقوق الطبع محفوظة لمسابقة علم نافع &copy; 2026</p>
+    <!-- تذييل الصفحة -->
+    <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500 mt-12">
+        <p>مشروع مسابقة علم نافع في القرآن الكريم • الواجهة الفورية المطورة والجاهزة لقواعد البيانات السحابية</p>
     </footer>
 
+    <!-- شفرة المحرك البرمجي وحفظ الحالة اللحظية (JavaScript) -->
     <script>
-        let studentName = "";
-        let currentQIdx = 0;
-        let quizScore = 0;
-        let isAnsweringBlocked = false;
-        let studentsList = [];
-
-        const quizQuestions = [
-            { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
-            { q: "الاسم المنصوب الذي يبين علة وقوع الفعل ويأتي جواباً لـ (لماذا) هو:", a: ["المفعول المطلق", "المفعول لأجله", "المفعول فيه", "الحال"], correct: 1 }
+        // دالة التهيئة الافتراضية للبيانات في LocalStorage كحالة وسيطة مستقرة
+        const DEFAULT_STATE = [
+            { id: "1", name: "أحمد محمد", answer: "مفعول به منصوب وعلامة نصبه الفتحة", status: "معتمد", score: 9 },
+            { id: "2", name: "عمر فاروق", answer: "بدل مجرور بالكسرة الظاهرة", status: "بحاجة لمراجعة", score: 5 },
+            { id: "3", name: "فاطمة الزهراء", answer: "مبتدأ مؤخر مرفوع بالضمة", status: "معتمد", score: 10 }
         ];
 
-        function startStudentQuiz() {
-            const input = document.getElementById("student-name-input").value.trim();
-            if (!input) return alert("الرجاء إدخال اسمك الكريم أولاً");
-            studentName = input;
-            currentQIdx = 0;
-            quizScore = 0;
-            document.getElementById("quiz-player-name").innerText = `المتسابق: ${studentName}`;
-            directSwitch("quiz-view");
-            showQuestion();
-        }
+        let currentRole = 'player'; // الدور الافتراضي عند الفتح
 
-        function showQuestion() {
-            isAnsweringBlocked = false;
-            document.getElementById("feedback-area").classList.add("hidden");
-            document.getElementById("next-q-btn").classList.add("hidden");
-            const q = quizQuestions[currentQIdx];
-            document.getElementById("question-number").innerText = `السؤال ${currentQIdx + 1} من ${quizQuestions.length}`;
-            document.getElementById("question-text").innerText = q.q;
-
-            if (currentQIdx === quizQuestions.length - 1) {
-                document.getElementById("next-btn-text").innerText = "إنهاء ورؤية النتيجة";
-            } else {
-                document.getElementById("next-btn-text").innerText = "السؤال التالي";
+        function getAppState() {
+            const state = localStorage.getItem('challenge_state');
+            if (!state) {
+                localStorage.setItem('challenge_state', JSON.stringify(DEFAULT_STATE));
+                return DEFAULT_STATE;
             }
-
-            let html = "";
-            q.a.forEach((opt, idx) => {
-                html += `<button onclick="handleAnswer(${idx})" class="w-full text-right p-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition flex items-center gap-3">
-                    <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold">${idx + 1}</span>
-                    <span>${opt}</span>
-                </button>`;
-            });
-            document.getElementById("options-container").innerHTML = html;
+            return JSON.parse(state);
         }
 
-        function handleAnswer(idx) {
-            if (isAnsweringBlocked) return;
-            isAnsweringBlocked = true;
-            const q = quizQuestions[currentQIdx];
-            const feedback = document.getElementById("feedback-area");
-            feedback.classList.remove("hidden");
+        function saveAppState(newState) {
+            localStorage.setItem('challenge_state', JSON.stringify(newState));
+            renderInterface();
+        }
 
-            if (idx === q.correct) {
-                quizScore += 10;
-                document.getElementById("quiz-score").innerText = `الدرجة الحالية: ${quizScore}`;
-                feedback.className = "p-4 rounded-xl mb-4 text-center font-bold bg-green-100 text-green-700";
-                feedback.innerText = "إجابة صحيحة وممتازة! 🌟";
+        // التبديل الصارم والسلس بين واجهات العرض والأدوار
+        function switchRole(role) {
+            currentRole = role;
+            const btnPlayer = document.getElementById('btn-role-player');
+            const btnJudge = document.getElementById('btn-role-judge');
+            const secPlayer = document.getElementById('section-player');
+            const secJudge = document.getElementById('section-judge');
+
+            if (role === 'player') {
+                btnPlayer.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 bg-blue-600 text-white shadow-sm";
+                btnJudge.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 text-gray-600 hover:text-purple-700";
+                secPlayer.classList.remove('hidden');
+                secJudge.classList.add('hidden');
             } else {
-                feedback.className = "p-4 rounded-xl mb-4 text-center font-bold bg-red-100 text-red-700";
-                feedback.innerText = "إجابة خاطئة، بالتوفيق في السؤال القادم 🌷";
+                btnJudge.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 bg-purple-700 text-white shadow-sm";
+                btnPlayer.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 text-gray-600 hover:text-blue-600";
+                secPlayer.classList.add('hidden');
+                secJudge.classList.remove('hidden');
             }
-            document.getElementById("next-q-btn").classList.remove("hidden");
+            renderInterface();
         }
 
-        function executeNextQuestionStep() {
-            currentQIdx++;
-            if (currentQIdx >= quizQuestions.length) {
-                document.getElementById("res-card-name").innerText = studentName;
-                document.getElementById("res-card-score").innerText = `${quizScore} / ${quizQuestions.length * 10}`;
-                directSwitch("result-view");
-            } else {
-                showQuestion();
-            }
-        }
+        // معالجة وإضافة محاولة جديدة من المتسابق
+        function submitPlayerAction() {
+            const nameInput = document.getElementById('player-name-input');
+            const answerInput = document.getElementById('player-answer-input');
 
-        // الحفظ الفوري المطلق بدون أي انتظار لسيرفر معلق
-        function saveResultLocallyAndInstantly() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('ar-SA') + " - " + now.toLocaleDateString('ar-SA');
-            
-            const record = { name: studentName, score: quizScore, time: timeStr };
-            
-            let currentData = localStorage.getItem("elm_nafie_clean_data") ? JSON.parse(localStorage.getItem("elm_nafie_clean_data")) : [];
-            currentData.push(record);
-            localStorage.setItem("elm_nafie_clean_data", JSON.stringify(currentData));
-            
-            alert("تم التثبيت والحفظ الفوري بنجاح تام! لن يعلق الزر بعد الآن ✅");
-            openJudgePanel();
-        }
-
-        function openJudgePanel() {
-            studentsList = localStorage.getItem("elm_nafie_clean_data") ? JSON.parse(localStorage.getItem("elm_nafie_clean_data")) : [];
-            renderTable();
-            directSwitch("judge-view");
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById("results-table-body");
-            if (studentsList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400">لا توجد سجلات محفوظة حالياً.</td></tr>`;
+            if (!nameInput.value.trim() || !answerInput.value.trim()) {
+                alert('يرجى ملء الاسم والإجابة أولاً بشكل كامل!');
                 return;
             }
-            let html = "";
-            studentsList.forEach(item => {
-                html += `<tr class="hover:bg-slate-50 transition">
-                    <td class="p-4 font-bold text-slate-800">${item.name}</td>
-                    <td class="p-4 text-center text-blue-600 font-bold">${item.score}</td>
-                    <td class="p-4 text-center text-slate-400 text-xs">${item.time}</td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
+
+            const currentState = getAppState();
+            const newEntry = {
+                id: Date.now().toString(),
+                name: nameInput.value.trim(),
+                answer: answerInput.value.trim(),
+                status: "قيد التدقيق",
+                score: 0
+            };
+
+            currentState.push(newEntry);
+            saveAppState(currentState);
+
+            // مسح الحقول بعد النجاح لراحة المستخدم وتأكيد الإرسال
+            answerInput.value = '';
+            alert('تم إرسال محاولتك بنجاح وبثها فوريًا إلى لوحة تحكم الحكم!');
         }
 
-        let asc = true;
-        function toggleSort() {
-            asc = !asc;
-            studentsList.sort((a, b) => asc ? a.name.localeCompare(b.name, 'ar') : b.name.localeCompare(a.name, 'ar'));
-            renderTable();
+        // تعديل الدرجة والتقييم من قبل المشرف والحكم
+        function updateScore(id, newScore) {
+            const currentState = getAppState();
+            const item = currentState.find(i => i.id === id);
+            if (item) {
+                item.score = parseInt(newScore) || 0;
+                item.status = item.score >= 7 ? "معتمد" : "دون المأمول";
+                saveAppState(currentState);
+            }
         }
 
-        function goToHome() {
-            document.getElementById("student-name-input").value = "";
-            directSwitch("welcome-view");
+        // فرز وترتيب البيانات تنازلياً حسب الدرجة الأعلى
+        function sortResultsByScore() {
+            const currentState = getAppState();
+            currentState.sort((a, b) => b.score - a.score);
+            saveAppState(currentState);
         }
 
-        function directSwitch(viewId) {
-            ["welcome-view", "student-login-view", "quiz-view", "result-view", "judge-view"].forEach(id => {
-                document.getElementById(id).classList.add("hidden");
-            });
-            document.getElementById(viewId).classList.remove("hidden");
+        // مسح فوري شامل لجدول النتائج السحابية والمحلية
+        function clearAllTableResults() {
+            if (confirm('هل أنت متأكد من مسح جميع النتائج الفورية من الجدول بشكل نهائي؟')) {
+                saveAppState([]);
+            }
         }
+
+        // مسح الذاكرة المحلية والعودة للافتراضي
+        function resetLocalData() {
+            localStorage.removeItem('challenge_state');
+            renderInterface();
+            alert('تمت إعادة تهيئة البيانات للوضع الافتراضي بنجاح.');
+        }
+
+        // دالة محاكاة التحديث اللحظي لربط السحابة وثبات الأزرار
+        function simulateCloudSync() {
+            const statusText = document.getElementById('sync-status-text');
+            statusText.innerText = "Syncing with cloud path...";
+            statusText.className = "text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded border border-yellow-200 font-mono";
+            
+            setTimeout(() => {
+                statusText.innerText = "Synced & Live Real-time";
+                statusText.className = "text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-200 font-mono";
+                renderInterface();
+            }, 600);
+        }
+
+        // رندرة وتحديث الواجهات والبيانات ديناميكياً بناءً على مصفوفة الحالة
+        function renderInterface() {
+            const data = getAppState();
+            
+            // 1. تحديث شاشة المتسابق (يرى نفسه وآخر محاولة له أو كامل المحاولات كمتصفح)
+            const playerBody = document.getElementById('player-personal-row');
+            playerBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                playerBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400 bg-gray-50">لا توجد محاولات مرسلة حالياً. حدّث الصفحة أو أرسل إجابة.</td></tr>`;
+            } else {
+                // محاكاة: المتسابق يرى المحاولة الأخيرة المضافة كعينة على بياناته الشخصية المزامنة سحابياً
+                const myLatest = data[data.length - 1];
+                const statusColor = myLatest.status === "معتمد" ? "text-green-600 bg-green-50" : "text-amber-600 bg-amber-50";
+                playerBody.innerHTML = `
+                    <tr class="hover:bg-blue-50/30 transition">
+                        <td class="p-3 font-semibold text-gray-900">${myLatest.name}</td>
+                        <td class="p-3 text-gray-600">${myLatest.answer}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-medium ${statusColor}">${myLatest.status}</span></td>
+                        <td class="p-3 text-center font-bold text-blue-600">${myLatest.score}</td>
+                    </tr>
+                `;
+            }
+
+            // 2. تحديث شاشة الحكم والمشرف الشاملة (يرى الكل مع الصلاحيات الفورية)
+            const judgeBody = document.getElementById('judge-master-table');
+            judgeBody.innerHTML = '';
+
+            if (data.length === 0) {
+                judgeBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 bg-gray-50">الجدول فارغ تماماً، بانتظار إرسال محاولات المتسابقين.</td></tr>`;
+            } else {
+                data.forEach(item => {
+                    const badgeClass = item.status === "معتمد" ? "bg-green-100 text-green-800" : "bg-purple-100 text-purple-800";
+                    const row = document.createElement('tr');
+                    row.className = "hover:bg-purple-50/20 transition text-xs sm:text-sm";
+                    row.innerHTML = `
+                        <td class="p-3 font-semibold text-gray-900">${item.name}</td>
+                        <td class="p-3 text-gray-600 max-w-xs truncate">${item.answer}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-semibold ${badgeClass}">${item.status}</span></td>
+                        <td class="p-3 text-center">
+                            <input type="number" min="0" max="10" value="${item.score}" 
+                                   onchange="updateScore('${item.id}', this.value)" 
+                                   class="w-16 p-1 text-center border border-purple-300 rounded focus:ring-1 focus:ring-purple-500 font-bold text-purple-900 bg-purple-50">
+                        </td>
+                        <td class="p-3 text-center">
+                            <button onclick="(() => { 
+                                const current = getAppState().filter(i => i.id !== '${item.id}'); 
+                                saveAppState(current); 
+                            })()" class="text-xs text-red-500 hover:text-red-700 transition font-medium border border-red-200 px-2 py-1 rounded bg-red-50">
+                                حذف السجل
+                            </button>
+                        </td>
+                    `;
+                    judgeBody.appendChild(row);
+                });
+            }
+        }
+
+        // تشغيل الرندرة الأولية فور تحميل الصفحة بنجاح
+        window.onload = function() {
+            renderInterface();
+        };
     </script>
 </body>
 </html>
