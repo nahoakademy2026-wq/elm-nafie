@@ -17,11 +17,10 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
-    <!-- شريط التنقل العلوي المحمي والموحد -->
+    <!-- شريط التنقل العلوي المحمي -->
     <header class="bg-white shadow-sm p-4 border-b border-slate-100 sticky top-0 z-50">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center px-4 gap-2">
             <div class="flex items-center gap-2">
-                <!-- أزرار تحكم تظهر فقط للمشرف وتختفي تماماً أمام المتسابق للأمان الكامل -->
                 <button onclick="handleBackAction()" id="global-back-btn" class="text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition hidden">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
@@ -43,15 +42,13 @@
         </div>
     </header>
 
-    <!-- الواجهات الديناميكية للمسابقة -->
     <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
         
-        <!-- 1. واجهة الترحيب وفصل المسارات الاستراتيجية -->
+        <!-- 1. واجهة الترحيب -->
         <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
             <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
             <p class="text-sm text-slate-500 mb-8">يرجى اختيار مسار الدخول لبدء التحدي</p>
-            
             <div class="space-y-4">
                 <button onclick="switchView('student-login-view')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
                     <i class="fas fa-user-edit"></i> دخول المتسابق (الطالب)
@@ -62,7 +59,7 @@
             </div>
         </div>
 
-        <!-- 2. واجهة تسجيل اسم الطالب (محمية ومستقلة) -->
+        <!-- 2. واجهة تسجيل اسم الطالب -->
         <div id="student-login-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-user-circle text-5xl text-blue-500 mb-4"></i>
             <h2 class="text-lg font-bold mb-6 text-slate-700">تسجيل اسم المتسابق الكريم</h2>
@@ -72,30 +69,26 @@
             </button>
         </div>
 
-        <!-- 3. واجهة المسابقة الفردية للطالب -->
+        <!-- 3. واجهة المسابقة الفردية -->
         <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
                 <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
                 <span id="quiz-score" class="text-amber-700 font-bold bg-amber-50 px-4 py-1.5 rounded-full text-sm">الدرجة الحالية: 0</span>
             </div>
-            
             <div id="quiz-content">
-                <div class="bg-slate-50 p-6 rounded-xl mb-6 border border-slate-100 border-none">
+                <div class="bg-slate-50 p-6 rounded-xl mb-6 border-none">
                     <span id="question-number" class="text-xs font-bold text-blue-500 block mb-2 tracking-wide"></span>
                     <p id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 text-right leading-relaxed"></p>
                 </div>
-
                 <div id="feedback-area" class="hidden p-4 rounded-xl mb-5 text-center font-bold text-lg transition-all"></div>
-
                 <div id="options-container" class="grid grid-cols-1 gap-3"></div>
-
                 <button id="next-q-btn" onclick="executeNextQuestionStep()" class="hidden mt-6 w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 px-6 rounded-xl transition text-center shadow-md">
-                    <span id="next-btn-text">Answering...</span> <i class="fas fa-chevron-left text-xs mr-1"></i>
+                    <span id="next-btn-text">الانتقال للخطوة التالية</span> <i class="fas fa-chevron-left text-xs mr-1"></i>
                 </button>
             </div>
         </div>
 
-        <!-- 4. بطاقة الشهادة التكيفية مع إضافة زر المشاركة المرن (مطلب 1) -->
+        <!-- 4. بطاقة التخرج والشهادة التكيفية المصلحة -->
         <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <div id="badge-container"></div>
             <h2 id="result-title" class="text-2xl font-bold mb-2 text-slate-800"></h2>
@@ -120,7 +113,6 @@
                 </div>
             </div>
 
-            <!-- أزرار التحكم الموسعة للمتسابق بما فيها زر المشاركة والنسخ المرن -->
             <div class="grid grid-cols-2 gap-2 mb-3">
                 <button onclick="startStudentQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm flex items-center justify-center gap-2">
                     <i class="fas fa-redo-alt"></i> إعادة المحاولة
@@ -134,7 +126,7 @@
             </button>
         </div>
 
-        <!-- 5. لوحة إدارة ومراقبة النتائج المكتملة والمراجعة بالكامل للمشرف (مطلب 3) -->
+        <!-- 5. لوحة إدارة ومراقبة النتائج حياً للمشرف -->
         <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
                 <h2 class="text-xl font-bold text-purple-700 flex items-center gap-2">
@@ -149,9 +141,7 @@
                     </button>
                 </div>
             </div>
-            
-            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> رصد فوري للدرجات والتقارير من السيرفر السحابي الموحد:</p>
-
+            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> رصد فوري من السيرفر السحابي الموحد:</p>
             <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm bg-white">
                 <table class="w-full text-right border-collapse">
                     <thead>
@@ -167,17 +157,16 @@
             </div>
         </div>
 
-        <!-- 6. واجهة الإعدادات والصلاحيات الحية للمشرف (مطلب 3) -->
+        <!-- 6. واجهة خيارات الإعدادات والصلاحيات -->
         <div id="settings-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <h2 class="text-xl font-bold mb-4 text-purple-700 flex items-center justify-center gap-2">
                 <i class="fas fa-cog"></i> خيارات الإعدادات والصلاحيات
             </h2>
             <div class="bg-slate-50 p-4 rounded-xl text-right text-sm text-slate-600 mb-6 leading-relaxed space-y-2 border">
-                <p><strong class="text-purple-700">● الهوية البصرية:</strong> مقفلة وثابتة على خط Tajawal وتنسيق ألوان علم نافع.</p>
-                <p><strong class="text-purple-700">● إدارة الأسئلة الحالية:</strong> تعمل على بنك الأسئلة المبرمج والمستقر تلافياً لأي انقطاع.</p>
-                <p><strong class="text-purple-700">● ميزات الأتمتة والـ PDF:</strong> محجوزة ومبرمجة للانطلاق التلقائي في خطة المرحلة الثانية الكبرى.</p>
+                <p><strong class="text-purple-700">● الهوية البصرية:</strong> مقفلة وثابتة على خط Tajawal.</p>
+                <p><strong class="text-purple-700">● ميزات الـ PDF والأتمتة:</strong> مجدولة للانطلاق التلقائي في خطة المرحلة الثانية الكبرى.</p>
             </div>
-            <button onclick="handleBackAction()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm shadow-sm">إغلاق والعودة للوحة</button>
+            <button onclick="handleBackAction()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm shadow-sm">إغلاق والعودة</button>
         </div>
 
     </main>
@@ -198,16 +187,16 @@
         let correctCount = 0;
         let isAnsweringBlocked = false;
         let viewHistory = ['welcome-view'];
-        let currentAccessRole = "guest"; // 'guest', 'student', 'judge'
+        let currentAccessRole = "guest";
 
         const quizQuestions = [
             { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
             { q: "الاسم المنصوب الذي يبين علة وقوع الفعل ويأتي جواباً لـ (لماذا) هو:", a: ["المفعول المطلق", "المفعول لأجله", "المفعول فيه", "الحال"], correct: 1 },
-            { q: "ورد في النص القرآني اللفظ 'مسرعاً'، اللفظ المظلل يعرب عادة في باب المنصوبات بصفته:", a: ["تمييزاً دالاً على الذات", "مفعولاً به صريحاً", "حالاً منصوبة تبين الهيئة", "صفة مشبهة تتبع ما قبلها"], correct: 2 }
+            { q: "ورد في النص القرآني اللفظ 'مسرعاً Mohawk'، اللفظ المظلل يعرب عادة في باب المنصوبات بصفته:", a: ["تمييزاً دالاً على الذات", "مفعولاً به صريحاً", "حالاً منصوبة تبين الهيئة", "صفة مشبهة تتبع ما قبلها"], correct: 2 }
         ];
 
         const positivePhrases = ["أحسنت يا بطل! 🌟", "إجابة رائعة 👏", "واصل التميز ⭐", "عبقري وذكي جداً! 🎯"];
-        const encouragePhrases = ["لا بأس، خيرها في غيرها 🌷", "حاول مرة أخرى، فأنت تتقدم خطوة خطوة ⭐", "الخطأ طريق التعلم 💡"];
+        const encouragePhrases = ["لا بأس، خيرها في غيرها 🌷", "حاول مرة أخرى، فأنت تتقدم خطوة خطوة ⭐", "الاجتهاد طريق التعلم 💡"];
 
         rootRef.on("value", (snapshot) => {
             const data = snapshot.val();
@@ -232,17 +221,14 @@
         function startStudentQuiz() {
             const nameInput = document.getElementById("student-name-input").value.trim();
             if (!nameInput) return alert("فضلاً أدخل اسمك الكريم أولاً للانضمام للمسابقة");
-            
             pName = nameInput;
             currentQIdx = 0;
             score = 0;
             correctCount = 0;
             isAnsweringBlocked = false;
-            currentAccessRole = "student"; // تثبيت دور المتسابق لعزل الصلاحيات وحمايته
-
+            currentAccessRole = "student";
             document.getElementById("quiz-player-name").innerText = `المتسابق: ${pName}`;
             document.getElementById("quiz-score").innerText = `الدرجة الحالية: 0`;
-            
             switchView("quiz-view");
             showQuestion();
         }
@@ -251,7 +237,6 @@
             isAnsweringBlocked = false;
             document.getElementById("feedback-area").classList.add("hidden");
             document.getElementById("next-q-btn").classList.add("hidden");
-
             const q = quizQuestions[currentQIdx];
             document.getElementById("question-number").innerText = `السؤال ${currentQIdx + 1} من ${quizQuestions.length}`;
             document.getElementById("question-text").innerText = q.q;
@@ -275,7 +260,6 @@
         function handleAnswerSelection(selectedIdx) {
             if (isAnsweringBlocked) return;
             isAnsweringBlocked = true;
-
             const q = quizQuestions[currentQIdx];
             const feedbackDiv = document.getElementById("feedback-area");
             feedbackDiv.classList.remove("hidden");
@@ -286,7 +270,6 @@
                 document.getElementById("quiz-score").innerText = `الدرجة الحالية: ${score}`;
                 document.getElementById(`opt-${selectedIdx}`).className = "w-full text-right p-4 rounded-xl border-2 border-green-500 bg-green-50 text-green-800 font-bold flex items-center gap-3";
                 document.getElementById(`bullet-${selectedIdx}`).className = "w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold";
-                
                 const randPhrase = positivePhrases[Math.floor(Math.random() * positivePhrases.length)];
                 feedbackDiv.className = "p-4 rounded-xl mb-4 text-center font-bold text-base sm:text-lg bg-green-100 text-green-700 confetti";
                 feedbackDiv.innerHTML = `<i class="fas fa-star animate-spin"></i> ${randPhrase}`;
@@ -295,12 +278,10 @@
                 document.getElementById(`bullet-${selectedIdx}`).className = "w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center text-xs font-bold";
                 document.getElementById(`opt-${q.correct}`).className = "w-full text-right p-4 rounded-xl border-2 border-green-500 bg-green-50 text-green-800 font-bold flex items-center gap-3";
                 document.getElementById(`bullet-${q.correct}`).className = "w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold";
-
                 const randPhrase = encouragePhrases[Math.floor(Math.random() * encouragePhrases.length)];
                 feedbackDiv.className = "p-4 rounded-xl mb-4 text-center font-bold text-sm sm:text-base bg-amber-50 text-amber-700";
                 feedbackDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${randPhrase}`;
             }
-
             document.getElementById("next-q-btn").classList.remove("hidden");
         }
 
@@ -317,37 +298,34 @@
             const totalPossible = quizQuestions.length * 10;
             const percent = Math.round((score / totalPossible) * 100);
             
-            let grade = "مقبول";
+            let grade = "تحتاج محاولة";
             let iconHtml = `<i class="fas fa-medal text-6xl text-slate-400 mb-4 animate-bounce"></i>`;
-            let title = "جهد طيب، واصل التعلم 🌷";
-            let subtitle = "الاستمرار والمحاولة هما أساس الحفظ والإتقان العلمي.";
+            let title = "بداية جيدة، واصل التعلم 🌷";
+            let subtitle = "الاجتهاد طريق التعلم، حاول مجدداً لتتقدم وتكسب الخبرة.";
 
             if (percent >= 90) {
                 grade = "ممتاز";
                 iconHtml = `<i class="fas fa-trophy text-6xl text-amber-500 mb-4 animate-bounce text-yellow-500"></i>`;
                 title = "تميز باهر وتفوق قرآنّي مبارك! 🎉";
                 subtitle = "أحسنت القراءة والضبط، هنيئاً لك هذا المستوى الرفيع.";
-            } else if (percent >= 75) {
-                grade = "جيد جداً";
-                iconHtml = `<i class="fas fa-star text-6xl text-blue-500 mb-4 animate-bounce"></i>`;
-                title = "عمل رائع ومتميز جداً ⭐";
-                subtitle = "أنت قريب جداً من الإتقان الكامل، استمر في المراجعة.";
             } else if (percent >= 50) {
                 grade = "جيد";
+                iconHtml = `<i class="fas fa-star text-6xl text-blue-500 mb-4 animate-bounce"></i>`;
+                title = "عمل رائع وطيب جداً ⭐";
+                subtitle = "أنت تتطور وتتقدم، استمر في المراجعة لتصل للممتاز.";
             }
 
             document.getElementById("badge-container").innerHTML = iconHtml;
             document.getElementById("result-title").innerText = title;
             document.getElementById("result-subtitle").innerText = subtitle;
-            
             document.getElementById("res-card-name").innerText = pName;
             document.getElementById("res-card-count").innerText = `${correctCount} من أصل ${quizQuestions.length}`;
             document.getElementById("res-card-percent").innerText = `${percent}%`;
             document.getElementById("res-card-grade").innerText = grade;
             
             const gBadge = document.getElementById("res-card-grade");
-            if (percent >= 75) gBadge.className = "font-extrabold text-base sm:text-xl text-green-600";
-            else gBadge.className = "font-extrabold text-base sm:text-xl text-amber-600";
+            if (percent >= 50) gBadge.className = "font-extrabold text-base sm:text-xl text-green-600";
+            else gBadge.className = "font-extrabold text-base sm:text-xl text-red-500";
 
             switchView("result-view");
 
@@ -363,23 +341,30 @@
             });
         }
 
-        // دالة مشاركة ونسخ التقرير المرن للمتسابق (مطلب 1)
+        // تحويل وتخصيص نص تقرير الواتساب التكيفي مع استبدال كلمة الخطأ بالاجتهاد (مطلب أساسي)
         function copyQuizResultReport() {
             const totalPossible = quizQuestions.length * 10;
             const percent = Math.round((score / totalPossible) * 100);
-            let grade = percent >= 90 ? "ممتاز" : (percent >= 75 ? "جيد جداً" : "جيد");
-
-            const reportText = `✨ تقرير نجاح متميز من مسابقة علم نافع في القرآن الكريم ✨\n\n🥇 المتسابق: ${pName}\n✅ الإجابات الصحيحة: ${correctCount} من أصل ${quizQuestions.length}\n📊 النسبة المئوية: ${percent}%\n🏆 التقدير العام: ${grade}\n\nالحمد لله الذي بنعمته تتم الصالحات 🌟`;
+            
+            let reportText = "";
+            
+            if (percent >= 90) {
+                reportText = `🏆 تقرير نجاح متميز من مسابقة علم نافع في القرآن الكريم 🏆\n\n🥇 المتسابق: ${pName}\n✅ الإجابات الصحيحة: ${correctCount} من أصل ${quizQuestions.length}\n📊 النسبة المئوية: ${percent}%\n⭐ التقدير العام: ممتاز\n\n💬 الحمد لله الذي بنعمته تتم الصالحات.. أحسنت يا بطل! 🌟`;
+            } else if (percent >= 50) {
+                reportText = `✨ تقرير مشاركة من مسابقة علم نافع في القرآن الكريم ✨\n\n👤 المتسابق: ${pName}\n✅ الإجابات الصحيحة: ${correctCount} من أصل ${quizQuestions.length}\n📊 النسبة المئوية: ${percent}%\n📈 التقدير العام: جيد\n\n💬 جهد رائع وطيب.. واصل التدرب لتصل للقمة! 👏`;
+            } else {
+                reportText = `📚 تقرير محاولة من مسابقة علم نافع في القرآن الكريم 📚\n\n👤 المتسابق: ${pName}\n✅ الإجابات الصحيحة: ${correctCount} من أصل ${quizQuestions.length}\n📊 النسبة المئوية: ${percent}%\n📝 التقدير العام: تحتاج محاولة\n\n💬 بداية جيدة.. الاجتهاد طريق التعلم، حاول مجدداً لتتقدم! 💡`;
+            }
             
             navigator.clipboard.writeText(reportText).then(() => {
-                alert("تم نسخ تقرير نجاحك بنجاح وبشكل مرن! يمكنك الآن لصقه ومشاركته فوراً مع أهلك ومعلمك عبر الواتساب أو تيليجرام 🔗");
+                alert("تم نسخ تقرير نتيجتك التكيفي بنجاح ومطابقته للرموز التعبيرية والعبارات الإيجابية! يمكنك الآن لصقه ومشاركته فوراً 🔗");
             }).catch(() => {
                 alert("تقرير نتيجتك: " + reportText);
             });
         }
 
         function switchToJudgeView() {
-            currentAccessRole = "judge"; // تثبيت دور المشرف لإظهار عناصر التحكم والترس
+            currentAccessRole = "judge";
             switchView("judge-view");
         }
 
@@ -406,7 +391,7 @@
         function goToHome() {
             document.getElementById("student-name-input").value = "";
             viewHistory = ['welcome-view'];
-            currentAccessRole = "guest"; // تصفير الدور عند العودة
+            currentAccessRole = "guest";
             executeViewSwitchLogic("welcome-view", false);
         }
 
@@ -414,12 +399,10 @@
             executeViewSwitchLogic(viewId, true);
         }
 
-        // دالة عزل وحماية واجهة المتسابق بالكامل عن المشرف (مطلب 2)
         function executeViewSwitchLogic(viewId, pushToHistory) {
             if (pushToHistory && viewHistory[viewHistory.length - 1] !== viewId) {
                 viewHistory.push(viewId);
             }
-
             ["welcome-view", "student-login-view", "quiz-view", "result-view", "judge-view", "settings-view"].forEach(id => {
                 document.getElementById(id).classList.add("hidden");
             });
@@ -430,7 +413,6 @@
             const backBtn = document.getElementById("global-back-btn");
             const settingsBtn = document.getElementById("global-settings-btn");
             
-            // جدار الأمان: إذا كان المستخدم طالباً، تحذف وتختفي أدوات الإدارة والإشراف تماماً لمنع التسريب
             if (currentAccessRole === "student") {
                 navBadge.innerText = "مسار المتسابق الآمن";
                 navBadge.className = "text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg block";
@@ -439,8 +421,6 @@
                 settingsBtn.classList.add("hidden");
                 return;
             }
-
-            // خيارات العرض المخصصة للمشرف فقط
             if (viewId === 'judge-view') {
                 navBadge.innerText = "لوحة المشرف";
                 navBadge.className = "text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg block";
