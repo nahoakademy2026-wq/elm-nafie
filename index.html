@@ -13,61 +13,31 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
-    <!-- شريط التنقل العلوي المطور بروابط صريحة وقطعية -->
-    <header class="bg-white shadow-sm p-4 border-b border-slate-100 sticky top-0 z-50">
-        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center px-4 gap-2">
-            <div class="flex items-center gap-2">
-                <button onclick="goToHome()" id="global-back-btn" class="text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition hidden">
-                    <i class="fas fa-arrow-right"></i> رجوع للرئيسية
-                </button>
-                <h1 onclick="goToHome()" class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2 cursor-pointer select-none">
-                    <i class="fas fa-book-open text-blue-600"></i> مسابقة علم نافع في القرآن الكريم
-                </h1>
-            </div>
-            <div class="flex items-center gap-4">
-                <span id="nav-role" class="text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg hidden">لوحة التحكم والمراقبة</span>
-                <div class="flex items-center gap-1">
-                    <button onclick="goToHome()" id="global-home-btn" class="text-slate-500 hover:text-blue-600 p-2 text-xl transition hidden" title="الصفحة الرئيسية">
-                        <i class="fas fa-home"></i>
-                    </button>
-                    <button onclick="openSettingsArea()" id="global-settings-btn" class="text-slate-500 hover:text-purple-600 p-2 text-xl transition hidden" title="الإعدادات">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                </div>
-            </div>
+    <header class="bg-white shadow-sm p-4 border-b border-slate-100">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <h1 onclick="goToHome()" class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2 cursor-pointer select-none">
+                <i class="fas fa-book-open text-blue-600"></i> مسابقة علم نافع في القرآن الكريم
+            </h1>
+            <span id="nav-role" class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg hidden">مسار المتسابق</span>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
         
-        <!-- 1. واجهة الترحيب وفصل المسارات -->
         <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
             <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
             <p class="text-sm text-slate-500 mb-8">يرجى اختيار مسار الدخول لبدء التحدي</p>
             <div class="space-y-4">
-                <button onclick="directSwitch('student-login-view')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+                <button onclick="directSwitch('student-login-view')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-sm">
                     <i class="fas fa-user-edit"></i> دخول المتسابق (الطالب)
                 </button>
-                <button onclick="openJudgeAuthModal()" class="w-full bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 border border-purple-200">
-                    <i class="fas fa-gavel"></i> دخول المشرف / الحكم 🔒
+                <button onclick="openJudgePanel()" class="w-full bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold py-3.5 px-6 rounded-xl transition border border-purple-200">
+                    <i class="fas fa-gavel"></i> دخول المشرف (بدون رمز سري مؤقتاً) 🔒
                 </button>
             </div>
         </div>
 
-        <!-- واجهة بوابة الرمز السري لقسم المشرف -->
-        <div id="judge-auth-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
-            <i class="fas fa-lock text-5xl text-purple-600 mb-4"></i>
-            <h2 class="text-lg font-bold mb-2 text-slate-800">منطقة خاصة بالمشرفين</h2>
-            <p class="text-xs text-slate-400 mb-6">فضلاً أدخل الرمز السري للدخول إلى لوحة المراقبة</p>
-            <input type="password" id="judge-password-input" placeholder="أدخل الرمز السري هنا..." class="w-full p-3 border border-slate-200 rounded-xl mb-4 text-center text-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="verifyJudgePassword()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm">تحقق ودخول</button>
-                <button onclick="goToHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-4 rounded-xl transition text-sm">إلغاء</button>
-            </div>
-        </div>
-
-        <!-- 2. واجهة تسجيل اسم الطالب المعزولة والآمنة -->
         <div id="student-login-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-user-circle text-5xl text-blue-500 mb-4"></i>
             <h2 class="text-lg font-bold mb-6 text-slate-700">تسجيل اسم المتسابق الكريم</h2>
@@ -77,233 +47,96 @@
             </button>
         </div>
 
-        <!-- 3. واجهة المسابقة والأسئلة والتفاعل للمتسابِق -->
         <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
                 <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
                 <span id="quiz-score" class="text-amber-700 font-bold bg-amber-50 px-4 py-1.5 rounded-full text-sm">الدرجة الحالية: 0</span>
             </div>
             <div id="quiz-content">
-                <div class="bg-slate-50 p-6 rounded-xl mb-6 border-none">
-                    <span id="question-number" class="text-xs font-bold text-blue-500 block mb-2 tracking-wide"></span>
-                    <p id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 text-right leading-relaxed"></p>
+                <div class="bg-slate-50 p-6 rounded-xl mb-6">
+                    <span id="question-number" class="text-xs font-bold text-blue-500 block mb-2"></span>
+                    <p id="question-text" class="text-lg font-bold text-slate-800 text-right leading-relaxed"></p>
                 </div>
-                <div id="feedback-area" class="hidden p-4 rounded-xl mb-5 text-center font-bold text-lg transition-all"></div>
+                <div id="feedback-area" class="hidden p-4 rounded-xl mb-5 text-center font-bold text-lg"></div>
                 <div id="options-container" class="grid grid-cols-1 gap-3"></div>
                 <button id="next-q-btn" onclick="executeNextQuestionStep()" class="hidden mt-6 w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 px-6 rounded-xl transition text-center shadow-md">
-                    <span id="next-btn-text">Annihilate الانتقال للخطوة التالية</span> <i class="fas fa-chevron-left text-xs mr-1"></i>
+                    <span id="next-btn-text">الانتقال للخطوة التالية</span> <i class="fas fa-chevron-left text-xs mr-1"></i>
                 </button>
             </div>
         </div>
 
-        <!-- 4. بطاقة الشهادة التكيفية المصلحة والمستقرة 100% -->
         <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
-            <div id="badge-container"></div>
-            <h2 id="result-title" class="text-2xl font-bold mb-2 text-slate-800"></h2>
-            <p id="result-subtitle" class="text-slate-500 mb-6"></p>
+            <div id="badge-container"><i class="fas fa-trophy text-6xl text-amber-500 mb-4 block"></i></div>
+            <h2 class="text-2xl font-bold mb-2 text-slate-800">اكتمل الاختبار بنجاح!</h2>
+            <p class="text-slate-500 mb-6">تهانينا على إتمام محاولة المسابقة</p>
             
-            <div class="bg-slate-50 p-6 rounded-2xl mb-4 border border-slate-100 text-right space-y-3">
-                <div class="flex justify-between border-b pb-2">
+            <div class="bg-slate-50 p-6 rounded-2xl mb-6 border border-slate-100 text-right space-y-3">
+                <div class="flex justify-between">
                     <span class="text-slate-500 text-sm">اسم المتسابق:</span>
-                    <span id="res-card-name" class="font-bold text-slate-800 text-sm"></span>
+                    <span id="res-card-name" class="font-bold text-slate-800"></span>
                 </div>
-                <div class="flex justify-between border-b pb-2">
-                    <span class="text-slate-500 text-sm">الإجابات الصحيحة:</span>
-                    <span id="res-card-count" class="font-bold text-slate-800 text-sm"></span>
-                </div>
-                <div class="flex justify-between border-b pb-2">
-                    <span class="text-slate-500 text-sm">النسبة المئوية:</span>
-                    <span id="res-card-percent" class="font-bold text-blue-600 text-base sm:text-lg"></span>
-                </div>
-                <div class="flex justify-between pt-1">
-                    <span class="text-slate-500 text-sm">التقدير العام:</span>
-                    <span id="res-card-grade" class="font-extrabold text-base sm:text-xl"></span>
+                <div class="flex justify-between">
+                    <span class="text-slate-500 text-sm">الدرجة النهائية:</span>
+                    <span id="res-card-score" class="font-bold text-blue-600 text-lg"></span>
                 </div>
             </div>
 
-            <!-- زر الحفظ الفوري المباشر والخالي من التعليق لضمان جلب البيانات -->
-            <button id="explicit-save-btn" onclick="saveResultLocallyAndInstantly()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-base shadow-md mb-4 flex items-center justify-center gap-2 animate-bounce">
-                <i class="fas fa-check-circle"></i> اضغط هنا لـ حِفْظ وتثبيت النتيجة فوراً 💾
+            <button onclick="saveResultLocallyAndInstantly()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-base shadow-md mb-4 flex items-center justify-center gap-2">
+                <i class="fas fa-check-circle"></i> تثبيت وحفظ النتيجة في الحال 💾
             </button>
 
-            <div class="grid grid-cols-2 gap-2 mb-3">
-                <button onclick="directSwitch('student-login-view')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm flex items-center justify-center gap-2">
-                    <i class="fas fa-redo-alt"></i> إعادة المحاولة
-                </button>
-                <button onclick="copyQuizResultReport()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm flex items-center justify-center gap-2">
-                    <i class="fas fa-share-alt"></i> مشاركة النتيجة 🔗
-                </button>
-            </div>
-            <button onclick="goToHome()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                <i class="fas fa-home"></i> العودة للصفحة الرئيسية
+            <button onclick="goToHome()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl transition text-sm">
+                العودة للرئيسية
             </button>
         </div>
 
-        <!-- 5. لوحة إدارة ورصد النتائج الحية التفاعلية بنسبة 100% -->
         <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
-                <h2 class="text-xl font-bold text-purple-700 flex items-center gap-2">
-                    <i class="fas fa-gavel"></i> لوحة إدارة النتائج (المشرف الرئيسي)
-                </h2>
-                <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                    <button onclick="clearAllResults()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border border-red-200 transition text-center">
-                        <i class="fas fa-trash-alt"></i> مسح سجل الطلاب
-                    </button>
-                    <button onclick="goToHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-center">
-                        خروج المشرف
-                    </button>
-                </div>
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h2 class="text-xl font-bold text-purple-700"><i class="fas fa-gavel"></i> لوحة رصد النتائج (المشرف)</h2>
+                <button onclick="goToHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold transition">خروج</button>
             </div>
-            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> اضغط على عناوين الجدول لتفعيل الفرز والترتيب الفوري للدرجات والأسماء أبجدياً ورقمياً حياً:</p>
-            <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm bg-white">
+            <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm">
                 <table class="w-full text-right border-collapse">
                     <thead>
-                        <tr class="bg-slate-50 text-slate-700 border-b border-slate-100 select-none">
-                            <th onclick="toggleSort('name')" class="p-4 font-bold text-xs sm:text-sm border-l cursor-pointer hover:bg-slate-100 transition text-right">
-                                اسم المتسابق <i class="fas fa-sort text-slate-400 text-[10px] mr-1"></i>
+                        <tr class="bg-slate-50 text-slate-700 border-b">
+                            <th onclick="toggleSort()" class="p-4 font-bold text-sm cursor-pointer hover:bg-slate-100 transition select-none">
+                                اسم المتسابق (اضغط هنا لفرز الترتيب 👆)
                             </th>
-                            <th onclick="toggleSort('score')" class="p-4 font-bold text-xs sm:text-sm text-center border-l cursor-pointer hover:bg-slate-100 transition">
-                                الدرجة المستحقة <i class="fas fa-sort text-slate-400 text-[10px] mr-1"></i>
-                            </th>
-                            <th onclick="toggleSort('percent')" class="p-4 font-bold text-xs sm:text-sm text-center border-l cursor-pointer hover:bg-slate-100 transition">
-                                النسبة والتقدير <i class="fas fa-sort text-slate-400 text-[10px] mr-1"></i>
-                            </th>
-                            <th onclick="toggleSort('rawTime')" class="p-4 font-bold text-xs sm:text-sm text-center cursor-pointer hover:bg-slate-100 transition">
-                                وقت المحاولة <i class="fas fa-sort text-slate-400 text-[10px] mr-1"></i>
-                            </th>
+                            <th class="p-4 font-bold text-sm text-center">الدرجة</th>
+                            <th class="p-4 font-bold text-sm text-center">الوقت والتاريخ</th>
                         </tr>
                     </thead>
-                    <tbody id="results-table-body" class="divide-y divide-slate-100 text-slate-600 text-xs sm:text-sm">
-                        <!-- تظهر البيانات هنا مباشرة فور الحفظ -->
-                    </tbody>
+                    <tbody id="results-table-body" class="divide-y divide-slate-100 text-sm">
+                        </tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- 6. واجهة خيارات الإعدادات والصلاحيات -->
-        <div id="settings-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
-            <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
-                <i class="fas fa-cog"></i>
-            </div>
-            <h2 class="text-xl font-bold mb-4 text-purple-700">خيارات الإعدادات والصلاحيات</h2>
-            <div class="bg-slate-50 p-4 rounded-xl text-right text-sm text-slate-600 mb-6 space-y-3 border border-slate-200">
-                <p><strong class="text-purple-700">● الهوية البصرية والمكتبة:</strong> مقفلة وثابتة على خط Tajawal المعياري للمنصة.</p>
-                <p><strong class="text-purple-700">● ميزات الأتمتة والـ PDF:</strong> مهيأة بالكامل للربط التلقائي بمجلدات حساب Google Drive المرمّزة والموسومة لحساب مادة الإعراب والتفسير تلقائياً عبر Gemini API.</p>
-            </div>
-            <button onclick="directSwitch('judge-view')" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-md">
-                إغلاق والعودة للوحة الإدارة ↩️
-            </button>
         </div>
 
     </main>
 
     <footer class="bg-white border-t border-slate-100 p-4 text-center">
-        <p class="text-xs text-slate-400">حقوق الطبع محفوظة لبرنامج مسابقة علم نافع في القرآن الكريم &copy; 2026</p>
+        <p class="text-xs text-slate-400">حقوق الطبع محفوظة لمسابقة علم نافع &copy; 2026</p>
     </footer>
 
     <script>
-        let pName = "";
+        let studentName = "";
         let currentQIdx = 0;
-        let score = 0;
-        let correctCount = 0;
+        let quizScore = 0;
         let isAnsweringBlocked = false;
-        let currentAccessRole = "guest";
-        
-        let studentsDataList = [];
-        let currentSortKey = "rawTime";
-        let isSortAscending = false;
+        let studentsList = [];
 
         const quizQuestions = [
             { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
-            { q: "الاسم المنصوب الذي يبين علة وقوع الفعل ويأتي جواباً لـ (لماذا) هو:", a: ["المفعول المطلق", "المفعول لأجله", "المفعول فيه", "الحال"], correct: 1 },
-            { q: "ورد في النص القرآني اللفظ 'مسرعاً'، اللفظ المظلل يعرب عادة في باب المنصوبات بصفته:", a: ["تمييزاً دالاً على الذات", "مفعولاً به صريحاً", "حالاً منصوبة تبين الهيئة", "صفة مشبهة تتبع ما قبلها"], correct: 2 }
+            { q: "الاسم المنصوب الذي يبين علة وقوع الفعل ويأتي جواباً لـ (لماذا) هو:", a: ["المفعول المطلق", "المفعول لأجله", "المفعول فيه", "الحال"], correct: 1 }
         ];
 
-        const positivePhrases = ["أحسنت يا بطل! 🌟", "إجابة رائعة 👏", "واصل التميز ⭐", "عبقري وذكي جداً! 🎯"];
-        const encouragePhrases = ["لا بأس، خيرها في غيرها 🌷", "حاول مرة أخرى، فأنت تتقدم خطوة خطوة ⭐", "الاجتهاد طريق التعلم 💡"];
-
-        // دالة تحميل البيانات المحلية الفورية والمستقرة 100%
-        function loadLocalData() {
-            const localRaw = localStorage.getItem("elm_nafie_results_2026");
-            if (localRaw) {
-                studentsDataList = JSON.parse(localRaw);
-            } else {
-                studentsDataList = [];
-            }
-            sortAndRenderTable();
-        }
-
-        function toggleSort(key) {
-            if (currentSortKey === key) {
-                isSortAscending = !isSortAscending;
-            } else {
-                currentSortKey = key;
-                isSortAscending = (key === "name");
-            }
-            sortAndRenderTable();
-        }
-
-        function sortAndRenderTable() {
-            studentsDataList.sort((a, b) => {
-                let valA = a[currentSortKey];
-                let valB = b[currentSortKey];
-                if (typeof valA === 'string') {
-                    return isSortAscending ? valA.localeCompare(valB, 'ar') : valB.localeCompare(valA, 'ar');
-                } else {
-                    return isSortAscending ? valA - valB : valB - valA;
-                }
-            });
-            renderTableRecords();
-        }
-
-        function renderTableRecords() {
-            const tbody = document.getElementById("results-table-body");
-            if (studentsDataList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن... بانتظار دخول الطلاب وضغطهم على زر حفظ التثبيت.</td></tr>`;
-                return;
-            }
-            let html = "";
-            studentsDataList.forEach(item => {
-                html += `<tr class="hover:bg-slate-50/50 transition">
-                    <td class="p-4 font-bold text-slate-800 border-l text-right">${item.name}</td>
-                    <td class="p-4 text-center font-extrabold text-blue-600 border-l">${item.score} / ${item.totalPossible}</td>
-                    <td class="p-4 text-center border-l"><span class="px-2 py-1 rounded bg-amber-50 text-amber-700 text-xs font-bold">${item.percent}% (${item.grade})</span></td>
-                    <td class="p-4 text-center text-[10px] sm:text-xs text-slate-400" dir="ltr">${item.timestamp}</td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
-        }
-
-        function openJudgeAuthModal() {
-            document.getElementById("judge-password-input").value = "";
-            directSwitch("judge-auth-view");
-        }
-
-        function verifyJudgePassword() {
-            const passInput = document.getElementById("judge-password-input").value.trim();
-            if (passInput === "2026") {
-                currentAccessRole = "judge";
-                loadLocalData(); // جلب البيانات فور الدخول الآمن للمشرف
-                directSwitch("judge-view");
-            } else {
-                alert("الرمز السري غير صحيح! تم حظر الدخول لحماية لوحة الإدارة 🔒");
-                goToHome();
-            }
-        }
-
         function startStudentQuiz() {
-            const nameInput = document.getElementById("student-name-input").value.trim();
-            if (!nameInput) return alert("فضلاً أدخل اسمك الكريم أولاً للانضمام للمسابقة");
-            
-            pName = nameInput;
+            const input = document.getElementById("student-name-input").value.trim();
+            if (!input) return alert("الرجاء إدخال اسمك الكريم أولاً");
+            studentName = input;
             currentQIdx = 0;
-            score = 0;
-            correctCount = 0;
-            isAnsweringBlocked = false;
-            currentAccessRole = "student";
-
-            document.getElementById("quiz-player-name").innerText = `المتسابق: ${pName}`;
-            document.getElementById("quiz-score").innerText = `الدرجة الحالية: 0`;
+            quizScore = 0;
+            document.getElementById("quiz-player-name").innerText = `المتسابق: ${studentName}`;
             directSwitch("quiz-view");
             showQuestion();
         }
@@ -317,45 +150,36 @@
             document.getElementById("question-text").innerText = q.q;
 
             if (currentQIdx === quizQuestions.length - 1) {
-                document.getElementById("next-btn-text").innerText = "الانتقال لمشاهدة النتيجة 🎯";
+                document.getElementById("next-btn-text").innerText = "إنهاء ورؤية النتيجة";
             } else {
-                document.getElementById("next-btn-text").innerText = "الانتقال للسؤال التالي";
+                document.getElementById("next-btn-text").innerText = "السؤال التالي";
             }
 
             let html = "";
             q.a.forEach((opt, idx) => {
-                html += `<button id="opt-${idx}" onclick="handleAnswerSelection(${idx})" class="w-full text-right p-4 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-slate-50 transition font-medium text-slate-700 flex items-center gap-3 outline-none">
-                    <span id="bullet-${idx}" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-xs font-bold border border-slate-200 transition">${idx + 1}</span>
-                    <span class="flex-grow text-sm sm:text-base">${opt}</span>
+                html += `<button onclick="handleAnswer(${idx})" class="w-full text-right p-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold">${idx + 1}</span>
+                    <span>${opt}</span>
                 </button>`;
             });
             document.getElementById("options-container").innerHTML = html;
         }
 
-        function handleAnswerSelection(selectedIdx) {
+        function handleAnswer(idx) {
             if (isAnsweringBlocked) return;
             isAnsweringBlocked = true;
             const q = quizQuestions[currentQIdx];
-            const feedbackDiv = document.getElementById("feedback-area");
-            feedbackDiv.classList.remove("hidden");
+            const feedback = document.getElementById("feedback-area");
+            feedback.classList.remove("hidden");
 
-            if (selectedIdx === q.correct) {
-                correctCount++;
-                score += 10;
-                document.getElementById("quiz-score").innerText = `الدرجة الحالية: ${score}`;
-                document.getElementById(`opt-${selectedIdx}`).className = "w-full text-right p-4 rounded-xl border-2 border-green-500 bg-green-50 text-green-800 font-bold flex items-center gap-3";
-                document.getElementById(`bullet-${selectedIdx}`).className = "w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold";
-                const randPhrase = positivePhrases[Math.floor(Math.random() * positivePhrases.length)];
-                feedbackDiv.className = "p-4 rounded-xl mb-4 text-center font-bold text-base sm:text-lg bg-green-100 text-green-700";
-                feedbackDiv.innerHTML = `<i class="fas fa-star"></i> ${randPhrase}`;
+            if (idx === q.correct) {
+                quizScore += 10;
+                document.getElementById("quiz-score").innerText = `الدرجة الحالية: ${quizScore}`;
+                feedback.className = "p-4 rounded-xl mb-4 text-center font-bold bg-green-100 text-green-700";
+                feedback.innerText = "إجابة صحيحة وممتازة! 🌟";
             } else {
-                document.getElementById(`opt-${selectedIdx}`).className = "w-full text-right p-4 rounded-xl border-2 border-red-500 bg-red-50 text-red-800 font-medium flex items-center gap-3";
-                document.getElementById(`bullet-${selectedIdx}`).className = "w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center text-xs font-bold";
-                document.getElementById(`opt-${q.correct}`).className = "w-full text-right p-4 rounded-xl border-2 border-green-500 bg-green-50 text-green-800 font-bold flex items-center gap-3";
-                document.getElementById(`bullet-${q.correct}`).className = "w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold";
-                const randPhrase = encouragePhrases[Math.floor(Math.random() * encouragePhrases.length)];
-                feedbackDiv.className = "p-4 rounded-xl mb-4 text-center font-bold text-sm sm:text-base bg-amber-50 text-amber-700";
-                feedbackDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${randPhrase}`;
+                feedback.className = "p-4 rounded-xl mb-4 text-center font-bold bg-red-100 text-red-700";
+                feedback.innerText = "إجابة خاطئة، بالتوفيق في السؤال القادم 🌷";
             }
             document.getElementById("next-q-btn").classList.remove("hidden");
         }
@@ -363,176 +187,70 @@
         function executeNextQuestionStep() {
             currentQIdx++;
             if (currentQIdx >= quizQuestions.length) {
-                showResultCardImmediately();
+                document.getElementById("res-card-name").innerText = studentName;
+                document.getElementById("res-card-score").innerText = `${quizScore} / ${quizQuestions.length * 10}`;
+                directSwitch("result-view");
             } else {
                 showQuestion();
             }
         }
 
-        function showResultCardImmediately() {
-            const totalPossible = quizQuestions.length * 10;
-            const percent = Math.round((score / totalPossible) * 100);
-            
-            let grade = "تحتاج محاولة";
-            let iconHtml = `<i class="fas fa-heart text-6xl text-rose-400 mb-4 block"></i>`;
-            let title = "بداية جيدة، واصل التعلم 🌷";
-            let subtitle = "الاجتهاد طريق التعلم، حاول مجدداً لتتقدم وتكسب الخبرة.";
-
-            if (percent >= 90) {
-                grade = "ممتاز";
-                iconHtml = `<i class="fas fa-trophy text-6xl text-amber-500 mb-4 block text-yellow-500"></i>`;
-                title = "تميز باهر وتفوق قرآنّي مبارك! 🎉";
-                subtitle = "أحسنت القراءة والضبط، هنيئاً لك هذا المستوى الرفيع.";
-            } else if (percent >= 50) {
-                grade = "جيد";
-                iconHtml = `<i class="fas fa-star text-6xl text-blue-500 mb-4 block"></i>`;
-                title = "عمل رائع وطيب جداً ⭐";
-                subtitle = "أنت تتطور وتتقدم، استمر في المراجعة لتصل للممتاز.";
-            }
-
-            document.getElementById("badge-container").innerHTML = iconHtml;
-            document.getElementById("result-title").innerText = title;
-            document.getElementById("result-subtitle").innerText = subtitle;
-            document.getElementById("res-card-name").innerText = pName;
-            document.getElementById("res-card-count").innerText = `${correctCount} من أصل ${quizQuestions.length}`;
-            document.getElementById("res-card-percent").innerText = `${percent}%`;
-            document.getElementById("res-card-grade").innerText = grade;
-            
-            const gBadge = document.getElementById("res-card-grade");
-            if (percent >= 50) gBadge.className = "font-extrabold text-base sm:text-xl text-green-600";
-            else gBadge.className = "font-extrabold text-base sm:text-xl text-red-500";
-
-            const saveBtn = document.getElementById("explicit-save-btn");
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = `<i class="fas fa-check-circle"></i> اضغط هنا لـ حِفْظ وتثبيت النتيجة فوراً 💾`;
-            saveBtn.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-base shadow-md mb-4 flex items-center justify-center gap-2 animate-bounce";
-
-            directSwitch("result-view");
-        }
-
-        // دالة الحفظ الفوري اللحظي والمستقل 100% لإنهاء مشكلة حلقة التعليق
+        // الحفظ الفوري المطلق بدون أي انتظار لسيرفر معلق
         function saveResultLocallyAndInstantly() {
-            const totalPossible = quizQuestions.length * 10;
-            const percent = Math.round((score / totalPossible) * 100);
-            const gBadge = document.getElementById("res-card-grade").innerText;
-            
             const now = new Date();
             const timeStr = now.toLocaleTimeString('ar-SA') + " - " + now.toLocaleDateString('ar-SA');
-            const rawTimeVal = Date.now();
             
-            const saveBtn = document.getElementById("explicit-save-btn");
-            saveBtn.disabled = true;
-            saveBtn.className = "w-full bg-green-500 text-white font-bold py-3.5 px-4 rounded-xl cursor-not-allowed text-base mb-4 flex items-center justify-center gap-2 animate-none";
+            const record = { name: studentName, score: quizScore, time: timeStr };
             
-            // جلب المصفوفة الحالية وتطعيمها محلياً فوراً
-            const currentRecords = localStorage.getItem("elm_nafie_results_2026") ? JSON.parse(localStorage.getItem("elm_nafie_results_2026")) : [];
-            currentRecords.push({
-                name: pName,
-                score: score,
-                totalPossible: totalPossible,
-                percent: percent,
-                grade: gBadge,
-                timestamp: timeStr,
-                rawTime: rawTimeVal
-            });
+            let currentData = localStorage.getItem("elm_nafie_clean_data") ? JSON.parse(localStorage.getItem("elm_nafie_clean_data")) : [];
+            currentData.push(record);
+            localStorage.setItem("elm_nafie_clean_data", JSON.stringify(currentData));
             
-            localStorage.setItem("elm_nafie_results_2026", JSON.stringify(currentRecords));
-            
-            saveBtn.innerHTML = `<i class="fas fa-check-circle"></i> تم الحفظ والتثبيت الفوري بنجاح! ✅`;
-            alert("تم حفظ نتيجتك وتثبيتها فوراً وبنجاح تام! يمكنك الآن فتح لوحة التحكم للمشرف لترى اسمك والدرجة وتجربة أزرار الترتيب والفرز بطلاقة.");
+            alert("تم التثبيت والحفظ الفوري بنجاح تام! لن يعلق الزر بعد الآن ✅");
+            openJudgePanel();
         }
 
-        function copyQuizResultReport() {
-            const cardPercentText = document.getElementById("res-card-percent").innerText;
-            const percent = parseInt(cardPercentText) || 0;
-            const cardName = document.getElementById("res-card-name").innerText;
-            const cardCount = document.getElementById("res-card-count").innerText;
-            let reportText = "";
-            
-            if (percent >= 90) {
-                reportText = `🏆 تقرير نجاح متميز من مسابقة علم نافع في القرآن الكريم 🏆\n\n🏅 المتسابق: ${cardName}\n✅ الإجابات الصحيحة: ${cardCount}\n📊 النسبة المئوية: ${percent}%\n🌟 التقدير العام: ممتاز\n\n💬 الحمد لله الذي بنعمته تتم الصالحات.. أحسنت يا بطل! 🌟`;
-            } else if (percent >= 50) {
-                reportText = `✨ تقرير مشاركة من مسابقة علم نافع في القرآن الكريم ✨\n\n👤 المتسابق: ${cardName}\n✅ الإجابات الصحيحة: ${cardCount}\n📊 النسبة المئوية: ${percent}%\n📈 التقدير العام: جيد\n\n💬 جهد رائع وطيب.. واصل التدرب لتصل للقمة! 👏`;
-            } else {
-                reportText = `📚 تقرير محاولة من مسابقة علم نافع في القرآن الكريم 📚\n\n👤 المتسابق: ${cardName}\n✅ الإجابات الصحيحة: ${cardCount}\n📊 النسبة المئوية: ${percent}%\n📝 التقدير العام: تحتاج محاولة\n\n💬 بداية جيدة.. الاجتهاد طريق التعلم، حاول مجدداً لتتقدم! 💡`;
+        function openJudgePanel() {
+            studentsList = localStorage.getItem("elm_nafie_clean_data") ? JSON.parse(localStorage.getItem("elm_nafie_clean_data")) : [];
+            renderTable();
+            directSwitch("judge-view");
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("results-table-body");
+            if (studentsList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400">لا توجد سجلات محفوظة حالياً.</td></tr>`;
+                return;
             }
-            
-            navigator.clipboard.writeText(reportText).then(() => {
-                alert("تم بنجاح نسخ تقرير نتيجتك التكيفي الغني بالرموز التعبيرية والعبارات التربوية! يمكنك الآن لصقه ومشاركته فوراً 🔗");
-            }).catch(() => {
-                alert("التقرير المنسوخ:\n" + reportText);
+            let html = "";
+            studentsList.forEach(item => {
+                html += `<tr class="hover:bg-slate-50 transition">
+                    <td class="p-4 font-bold text-slate-800">${item.name}</td>
+                    <td class="p-4 text-center text-blue-600 font-bold">${item.score}</td>
+                    <td class="p-4 text-center text-slate-400 text-xs">${item.time}</td>
+                </tr>`;
             });
+            tbody.innerHTML = html;
         }
 
-        function openSettingsArea() {
-            directSwitch("settings-view");
-        }
-
-        function clearAllResults() {
-            if (confirm("هل أنت متأكد من مسح جميع سجلات ونتائج الطلاب المخزنة نهائياً؟")) {
-                localStorage.removeItem("elm_nafie_results_2026");
-                studentsDataList = [];
-                renderTableRecords();
-            }
+        let asc = true;
+        function toggleSort() {
+            asc = !asc;
+            studentsList.sort((a, b) => asc ? a.name.localeCompare(b.name, 'ar') : b.name.localeCompare(a.name, 'ar'));
+            renderTable();
         }
 
         function goToHome() {
             document.getElementById("student-name-input").value = "";
-            document.getElementById("judge-password-input").value = "";
-            currentAccessRole = "guest";
             directSwitch("welcome-view");
         }
 
         function directSwitch(viewId) {
-            ["welcome-view", "judge-auth-view", "student-login-view", "quiz-view", "result-view", "judge-view", "settings-view"].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.classList.add("hidden");
+            ["welcome-view", "student-login-view", "quiz-view", "result-view", "judge-view"].forEach(id => {
+                document.getElementById(id).classList.add("hidden");
             });
-            
-            const targetEl = document.getElementById(viewId);
-            if(targetEl) targetEl.classList.remove("hidden");
-            
-            const navBadge = document.getElementById("nav-role");
-            const homeBtn = document.getElementById("global-home-btn");
-            const backBtn = document.getElementById("global-back-btn");
-            const settingsBtn = document.getElementById("global-settings-btn");
-            
-            if (currentAccessRole === "student") {
-                if(navBadge) { navBadge.innerText = "مسار المتسابق الآمن"; navBadge.className = "text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg block"; }
-                if(homeBtn) homeBtn.classList.add("hidden");
-                if(backBtn) backBtn.classList.add("hidden");
-                if(settingsBtn) settingsBtn.classList.add("hidden");
-                return;
-            }
-            
-            if (viewId === 'judge-view') {
-                if(navBadge) { navBadge.innerText = "لوحة المشرف"; navBadge.className = "text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg block"; }
-                if(homeBtn) homeBtn.classList.remove("hidden");
-                if(backBtn) backBtn.classList.add("hidden");
-                if(settingsBtn) settingsBtn.classList.remove("hidden");
-            } else if (viewId === 'settings-view') {
-                if(navBadge) { navBadge.innerText = "الإعدادات"; navBadge.className = "text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg block"; }
-                if(homeBtn) homeBtn.classList.remove("hidden");
-                if(backBtn) backBtn.className = "text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition block";
-                if(settingsBtn) settingsBtn.classList.add("hidden");
-            } else if (viewId === 'student-login-view' || viewId === 'result-view' || viewId === 'judge-auth-view' || viewId === 'quiz-view') {
-                if(navBadge) navBadge.classList.add("hidden");
-                if(homeBtn) homeBtn.className = "text-slate-500 hover:text-blue-600 p-2 text-xl transition block";
-                if(backBtn) backBtn.className = "text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition block";
-                if(settingsBtn) settingsBtn.classList.add("hidden");
-            } else {
-                if(navBadge) navBadge.classList.add("hidden");
-                if(homeBtn) homeBtn.classList.add("hidden");
-                if(backBtn) backBtn.classList.add("hidden");
-                if(settingsBtn) settingsBtn.classList.add("hidden");
-            }
+            document.getElementById(viewId).classList.remove("hidden");
         }
-        
-        // جلب البيانات المحلية مسبقاً في الخلفية لضمان سرعة الاستجابة
-        window.onload = function() {
-            const localRaw = localStorage.getItem("elm_nafie_results_2026");
-            if (localRaw) studentsDataList = JSON.parse(localRaw);
-        };
     </script>
 </body>
 </html>
