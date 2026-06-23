@@ -15,6 +15,7 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
+    <!-- شريط التنقل العلوي الذكي -->
     <header class="bg-white shadow-sm p-4 border-b border-slate-100 sticky top-0 z-50">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center px-4 gap-2">
             <div class="flex items-center gap-2">
@@ -41,6 +42,7 @@
 
     <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
         
+        <!-- 1. واجهة الترحيب وفصل المسارات -->
         <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
             <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
@@ -55,6 +57,7 @@
             </div>
         </div>
 
+        <!-- واجهة بوابة الرمز السري لقسم المشرف -->
         <div id="judge-auth-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-lock text-5xl text-purple-600 mb-4"></i>
             <h2 class="text-lg font-bold mb-2 text-slate-800">منطقة خاصة بالمشرفين</h2>
@@ -66,6 +69,7 @@
             </div>
         </div>
 
+        <!-- 2. واجهة تسجيل اسم الطالب المعزولة والآمنة -->
         <div id="student-login-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-user-circle text-5xl text-blue-500 mb-4"></i>
             <h2 class="text-lg font-bold mb-6 text-slate-700">تسجيل اسم المتسابق الكريم</h2>
@@ -75,6 +79,7 @@
             </button>
         </div>
 
+        <!-- 3. واجهة المسابقة والأسئلة والتفاعل للمتسابِق -->
         <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
                 <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
@@ -93,6 +98,7 @@
             </div>
         </div>
 
+        <!-- 4. بطاقة الشهادة التكيفية (مصلحة بالكامل ومطابقة للجزء أ بالرموز التعبيرية والعبارات) -->
         <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <div id="badge-container"></div>
             <h2 id="result-title" class="text-2xl font-bold mb-2 text-slate-800"></h2>
@@ -130,6 +136,7 @@
             </button>
         </div>
 
+        <!-- 5. لوحة إدارة ومراقبة النتائج حياً (تم تفعيل وتنشيط العناوين للفرز والترتيب وإصلاح الجلب 100%) -->
         <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
                 <h2 class="text-xl font-bold text-purple-700 flex items-center gap-2">
@@ -144,24 +151,34 @@
                     </button>
                 </div>
             </div>
-            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> رصد فوري للدرجات والتقارير المستقرة من السيرفر السحابي الموحد:</p>
+            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> اضغط على عناوين الجدول لتفعيل الفرز والترتيب الفوري للدرجات والأسماء أبجدياً ورقمياً حياً:</p>
             <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm bg-white">
                 <table class="w-full text-right border-collapse">
                     <thead>
-                        <tr class="bg-slate-50 text-slate-700 border-b border-slate-100">
-                            <th class="p-4 font-bold text-xs sm:text-sm border-l">اسم المتسابق</th>
-                            <th class="p-4 font-bold text-xs sm:text-sm text-center border-l">الدرجة المستحقة</th>
-                            <th class="p-4 font-bold text-xs sm:text-sm text-center border-l">النسبة والتقدير</th>
-                            <th class="p-4 font-bold text-xs sm:text-sm text-center">وقت المحاولة</th>
+                        <tr class="bg-slate-50 text-slate-700 border-b border-slate-100 select-none">
+                            <!-- تحويل العناوين لعناصر تفاعلية ونشطة للفرز والترتيب (Active Components) -->
+                            <th onclick="toggleSort('name')" class="p-4 font-bold text-xs sm:text-sm border-l cursor-pointer hover:bg-slate-100 transition text-right">
+                                اسم المتسابق <i class="fas fa-sort text-slate-400 text-[10px] mr-1"></i>
+                            </th>
+                            <th onclick="toggleSort('score')" class="p-4 font-bold text-xs sm:text-sm text-center border-l cursor-pointer hover:bg-slate-100 transition">
+                                الدرجة المستحقة <i class="fas fa-sort text-slate-400 text-[10px] mr-1"></i>
+                            </th>
+                            <th onclick="toggleSort('percent')" class="p-4 font-bold text-xs sm:text-sm text-center border-l cursor-pointer hover:bg-slate-100 transition">
+                                النسبة والتقدير <i class="fas fa-sort text-slate-400 text-[10px] mr-1"></i>
+                            </th>
+                            <th onclick="toggleSort('rawTime')" class="p-4 font-bold text-xs sm:text-sm text-center cursor-pointer hover:bg-slate-100 transition">
+                                وقت المحاولة <i class="fas fa-sort text-slate-400 text-[10px] mr-1"></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody id="results-table-body" class="divide-y divide-slate-100 text-slate-600 text-xs sm:text-sm">
-                        <tr><td colspan="4" class="p-8 text-center text-slate-400">جاري الاتصال بقاعدة البيانات وجلب درجات الطلاب حياً...</td></tr>
+                        <tr><td colspan="4" class="p-8 text-center text-slate-400">جاري الاتصال بالسيرفر وجلب المحاولات الحية...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
+        <!-- 6. واجهة خيارات الإعدادات والصلاحيات المباشرة -->
         <div id="settings-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
                 <i class="fas fa-cog"></i>
@@ -194,9 +211,13 @@
         let correctCount = 0;
         let isAnsweringBlocked = false;
         let currentAccessRole = "guest";
+        
+        let studentsDataList = []; // مصفوفة لحفظ البيانات محلياً لتفعيل الفرز والترتيب الحقيقي
+        let currentSortKey = "rawTime";
+        let isSortAscending = false;
 
         const quizQuestions = [
-            { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'fg؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
+            { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
             { q: "الاسم المنصوب الذي يبين علة وقوع الفعل ويأتي جواباً لـ (لماذا) هو:", a: ["المفعول المطلق", "المفعول لأجله", "المفعول فيه", "الحال"], correct: 1 },
             { q: "ورد في النص القرآني اللفظ 'مسرعاً'، اللفظ المظلل يعرب عادة في باب المنصوبات بصفته:", a: ["تمييزاً دالاً على الذات", "مفعولاً به صريحاً", "حالاً منصوبة تبين الهيئة", "صفة مشبهة تتبع ما قبلها"], correct: 2 }
         ];
@@ -204,16 +225,61 @@
         const positivePhrases = ["أحسنت يا بطل! 🌟", "إجابة رائعة 👏", "واصل التميز ⭐", "عبقري وذكي جداً! 🎯"];
         const encouragePhrases = ["لا بأس، خيرها في غيرها 🌷", "حاول مرة أخرى، فأنت تتقدم خطوة خطوة ⭐", "الاجتهاد طريق التعلم 💡"];
 
+        // دالة الاستماع والربط السحابي (مصلحة 100% لبناء وحقن الأسطر حياً بالجدول)
         rootRef.on("value", (snapshot) => {
             const data = snapshot.val();
-            const tbody = document.getElementById("results-table-body");
+            studentsDataList = [];
             if (!data) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن في السيرفر... بانتظار دخول أول متسابق.</td></tr>`;
+                renderTableRecords();
+                return;
+            }
+            Object.keys(data).forEach(key => {
+                const item = data[key];
+                studentsDataList.push({
+                    name: item.name || "متسابق مجهول",
+                    score: parseInt(item.score) || 0,
+                    totalPossible: parseInt(item.totalPossible) || 30,
+                    percent: parseInt(item.percent) || 0,
+                    grade: item.grade || "تحتاج محاولة",
+                    timestamp: item.timestamp || "",
+                    rawTime: item.rawTime || Date.now()
+                });
+            });
+            sortAndRenderTable();
+        });
+
+        // دالة الفرز والترتيب التفاعلي الحقيقي عند الضغط على العناوين
+        function toggleSort(key) {
+            if (currentSortKey === key) {
+                isSortAscending = !isSortAscending;
+            } else {
+                currentSortKey = key;
+                isSortAscending = (key === "name"); // الترتيب الافتراضي أبجدي للأسماء وتنازلي للأرقام
+            }
+            sortAndRenderTable();
+        }
+
+        function sortAndRenderTable() {
+            studentsDataList.sort((a, b) => {
+                let valA = a[currentSortKey];
+                let valB = b[currentSortKey];
+                if (typeof valA === 'string') {
+                    return isSortAscending ? valA.localeCompare(valB, 'ar') : valB.localeCompare(valA, 'ar');
+                } else {
+                    return isSortAscending ? valA - valB : valB - valA;
+                }
+            });
+            renderTableRecords();
+        }
+
+        function renderTableRecords() {
+            const tbody = document.getElementById("results-table-body");
+            if (studentsDataList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن في السيرفر... بانتظار دخول الطلاب.</td></tr>`;
                 return;
             }
             let html = "";
-            Object.keys(data).reverse().forEach(key => {
-                const item = data[key];
+            studentsDataList.forEach(item => {
                 html += `<tr class="hover:bg-slate-50/50 transition">
                     <td class="p-4 font-bold text-slate-800 border-l text-right">${item.name}</td>
                     <td class="p-4 text-center font-extrabold text-blue-600 border-l">${item.score} / ${item.totalPossible}</td>
@@ -222,7 +288,7 @@
                 </tr>`;
             });
             tbody.innerHTML = html;
-        });
+        }
 
         function openJudgeAuthModal() {
             document.getElementById("judge-password-input").value = "";
@@ -303,7 +369,7 @@
                 document.getElementById(`opt-${q.correct}`).className = "w-full text-right p-4 rounded-xl border-2 border-green-500 bg-green-50 text-green-800 font-bold flex items-center gap-3";
                 document.getElementById(`bullet-${q.correct}`).className = "w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold";
                 const randPhrase = encouragePhrases[Math.floor(Math.random() * encouragePhrases.length)];
-                feedbackDiv.className = "p-4 rounded-xl mb-4 text-center font-bold text-day-accent bg-amber-50 text-amber-700";
+                feedbackDiv.className = "p-4 rounded-xl mb-4 text-center font-bold text-sm sm:text-base bg-amber-50 text-amber-700";
                 feedbackDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${randPhrase}`;
             }
             document.getElementById("next-q-btn").classList.remove("hidden");
@@ -355,27 +421,39 @@
 
             const now = new Date();
             const timeStr = now.toLocaleTimeString('ar-SA') + " - " + now.toLocaleDateString('ar-SA');
+            const rawTimeVal = Date.now();
+            
             rootRef.push({
                 name: pName,
                 score: score,
                 totalPossible: totalPossible,
                 percent: percent,
                 grade: grade,
-                timestamp: timeStr
+                timestamp: timeStr,
+                rawTime: rawTimeVal
             });
         }
 
+        // استعادة وإصلاح نظام التقرير التكيفي الشامل والرموز التعبيرية والعبارات التربوية 100% (مطابقة للجزء أ)
         function copyQuizResultReport() {
             const cardPercentText = document.getElementById("res-card-percent").innerText;
             const percent = parseInt(cardPercentText) || 0;
             const cardName = document.getElementById("res-card-name").innerText;
             const cardCount = document.getElementById("res-card-count").innerText;
-            let reportText = `📊 نتيجتي في مسابقة علم نافع:\nالمتسابق: ${cardName}\nالدرجة: ${cardCount}\nالنسبة: ${percent}%`;
+            let reportText = "";
+            
+            if (percent >= 90) {
+                reportText = `🏆 تقرير نجاح متميز من مسابقة علم نافع في القرآن الكريم 🏆\n\n🏅 المتسابق: ${cardName}\n✅ الإجابات الصحيحة: ${cardCount}\n📊 النسبة المئوية: ${percent}%\n🌟 التقدير العام: ممتاز\n\n💬 الحمد لله الذي بنعمته تتم الصالحات.. أحسنت يا بطل! 🌟`;
+            } else if (percent >= 50) {
+                reportText = `✨ تقرير مشاركة من مسابقة علم نافع في القرآن الكريم ✨\n\n👤 المتسابق: ${cardName}\n✅ الإجابات الصحيحة: ${cardCount}\n📊 النسبة المئوية: ${percent}%\n📈 التقدير العام: جيد\n\n💬 جهد رائع وطيب.. واصل التدرب لتصل للقمة! 👏`;
+            } else {
+                reportText = `📚 تقرير محاولة من مسابقة علم نافع في القرآن الكريم 📚\n\n👤 المتسابق: ${cardName}\n✅ الإجابات الصحيحة: ${cardCount}\n📊 النسبة المئوية: ${percent}%\n📝 التقدير العام: تحتاج محاولة\n\n💬 بداية جيدة.. الاجتهاد طريق التعلم، حاول مجدداً لتتقدم! 💡`;
+            }
             
             navigator.clipboard.writeText(reportText).then(() => {
-                alert("تم نسخ تقرير النتيجة بنجاح! 🔗");
+                alert("تم بنجاح نسخ تقرير نتيجتك التكيفي الغني بالرموز التعبيرية والعبارات التربوية (مطابق تماماً للجزء أ)! يمكنك الآن لصقه ومشاركته فوراً 🔗");
             }).catch(() => {
-                alert("التقرير: " + reportText);
+                alert("التقرير المنسوخ:\n" + reportText);
             });
         }
 
@@ -396,7 +474,6 @@
             directSwitch("welcome-view");
         }
 
-        // نظام تبديل الشاشات المباشر والصريح والجذري لمنع التعليق
         function directSwitch(viewId) {
             ["welcome-view", "judge-auth-view", "student-login-view", "quiz-view", "result-view", "judge-view", "settings-view"].forEach(id => {
                 const el = document.getElementById(id);
