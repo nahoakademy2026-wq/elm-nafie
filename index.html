@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مسابقة علم نافع في القرآن الكريم</title>
+    <title>مسابقة علم نافع في القرآن الكريم - مسار المتسابق</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -17,50 +17,20 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
-    <!-- شريط التنقل العلوي المحمي -->
+    <!-- شريط علوي مبسط وخالٍ تماماً من أزرار الإشراف أو الترس تلافياً للتشتيت -->
     <header class="bg-white shadow-sm p-4 border-b border-slate-100 sticky top-0 z-50">
-        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center px-4 gap-2">
-            <div class="flex items-center gap-2">
-                <button onclick="handleBackAction()" id="global-back-btn" class="text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition hidden">
-                    <i class="fas fa-arrow-right"></i> رجوع
-                </button>
-                <h1 onclick="goToHome()" class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2 cursor-pointer select-none">
-                    <i class="fas fa-book-open text-blue-600"></i> مسابقة علم نافع في القرآن الكريم
-                </h1>
-            </div>
-            <div class="flex items-center gap-4">
-                <span id="nav-role" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-lg hidden"></span>
-                <div class="flex items-center gap-1">
-                    <button onclick="goToHome()" id="global-home-btn" class="text-slate-500 hover:text-blue-600 p-2 text-xl transition hidden" title="الصفحة الرئيسية">
-                        <i class="fas fa-home"></i>
-                    </button>
-                    <button onclick="openSettingsArea()" id="global-settings-btn" class="text-slate-500 hover:text-purple-600 p-2 text-xl transition hidden" title="الإعدادات">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                </div>
-            </div>
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2 select-none">
+                <i class="fas fa-book-open text-blue-600"></i> مسابقة علم نافع في القرآن الكريم
+            </h1>
+            <span class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg">مسار المتسابق الآمن</span>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
         
-        <!-- 1. واجهة الترحيب -->
-        <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
-            <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
-            <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
-            <p class="text-sm text-slate-500 mb-8">يرجى اختيار مسار الدخول لبدء التحدي</p>
-            <div class="space-y-4">
-                <button onclick="switchView('student-login-view')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
-                    <i class="fas fa-user-edit"></i> دخول المتسابق (الطالب)
-                </button>
-                <button onclick="switchToJudgeView()" class="w-full bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 border border-purple-200">
-                    <i class="fas fa-gavel"></i> دخول المشرف / الحكم
-                </button>
-            </div>
-        </div>
-
-        <!-- 2. واجهة تسجيل اسم الطالب -->
-        <div id="student-login-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
+        <!-- 1. واجهة تسجيل اسم الطالب البدائية -->
+        <div id="student-login-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-user-circle text-5xl text-blue-500 mb-4"></i>
             <h2 class="text-lg font-bold mb-6 text-slate-700">تسجيل اسم المتسابق الكريم</h2>
             <input type="text" id="student-name-input" placeholder="أدخل اسمك الثلاثي هنا..." class="w-full p-3 border border-slate-200 rounded-xl mb-4 text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -69,7 +39,7 @@
             </button>
         </div>
 
-        <!-- 3. واجهة المسابقة الفردية -->
+        <!-- 2. واجهة المسابقة والأسئلة والتفاعل -->
         <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
                 <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
@@ -88,7 +58,7 @@
             </div>
         </div>
 
-        <!-- 4. بطاقة التخرج والشهادة التكيفية المصلحة -->
+        <!-- 3. بطاقة النتيجة والشهادة التكيفية مع زر المشاركة المرن المحسوب لحظياً -->
         <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <div id="badge-container"></div>
             <h2 id="result-title" class="text-2xl font-bold mb-2 text-slate-800"></h2>
@@ -113,60 +83,14 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2 mb-3">
-                <button onclick="startStudentQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm flex items-center justify-center gap-2">
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="restartQuizProcess()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm flex items-center justify-center gap-2">
                     <i class="fas fa-redo-alt"></i> إعادة المحاولة
                 </button>
                 <button onclick="copyQuizResultReport()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm flex items-center justify-center gap-2">
                     <i class="fas fa-share-alt"></i> مشاركة النتيجة 🔗
                 </button>
             </div>
-            <button onclick="goToHome()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                <i class="fas fa-home"></i> العودة للصفحة الرئيسية
-            </button>
-        </div>
-
-        <!-- 5. لوحة إدارة ومراقبة النتائج حياً للمشرف -->
-        <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
-                <h2 class="text-xl font-bold text-purple-700 flex items-center gap-2">
-                    <i class="fas fa-gavel"></i> لوحة إدارة النتائج (المشرف)
-                </h2>
-                <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                    <button onclick="clearAllResults()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border border-red-200 transition text-center">
-                        <i class="fas fa-trash-alt"></i> مسح سجل الطلاب
-                    </button>
-                    <button onclick="goToHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-center">
-                        خروج المشرف
-                    </button>
-                </div>
-            </div>
-            <p class="text-xs sm:text-sm text-slate-500 mb-4"><i class="fas fa-info-circle"></i> رصد فوري من السيرفر السحابي الموحد:</p>
-            <div class="overflow-x-auto border border-slate-100 rounded-xl shadow-sm bg-white">
-                <table class="w-full text-right border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-700 border-b border-slate-100">
-                            <th class="p-4 font-bold text-xs sm:text-sm border-l">اسم المتسابق</th>
-                            <th class="p-4 font-bold text-xs sm:text-sm text-center border-l">الدرجة المستحقة</th>
-                            <th class="p-4 font-bold text-xs sm:text-sm text-center border-l">النسبة والتقدير</th>
-                            <th class="p-4 font-bold text-xs sm:text-sm text-center">وقت المحاولة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="results-table-body" class="divide-y divide-slate-100 text-slate-600 text-xs sm:text-sm"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- 6. واجهة خيارات الإعدادات والصلاحيات -->
-        <div id="settings-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
-            <h2 class="text-xl font-bold mb-4 text-purple-700 flex items-center justify-center gap-2">
-                <i class="fas fa-cog"></i> خيارات الإعدادات والصلاحيات
-            </h2>
-            <div class="bg-slate-50 p-4 rounded-xl text-right text-sm text-slate-600 mb-6 leading-relaxed space-y-2 border">
-                <p><strong class="text-purple-700">● الهوية البصرية:</strong> مقفلة وثابتة على خط Tajawal.</p>
-                <p><strong class="text-purple-700">● ميزات الـ PDF والأتمتة:</strong> مجدولة للانطلاق التلقائي في خطة المرحلة الثانية الكبرى.</p>
-            </div>
-            <button onclick="handleBackAction()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm shadow-sm">إغلاق والعودة</button>
         </div>
 
     </main>
@@ -186,8 +110,6 @@
         let score = 0;
         let correctCount = 0;
         let isAnsweringBlocked = false;
-        let viewHistory = ['welcome-view'];
-        let currentAccessRole = "guest";
 
         const quizQuestions = [
             { q: "ما إعراب كلمة 'طلباً' في جملة: 'ذاكرتُ طلباً للنجاح'؟", a: ["مفعول لأجله", "حال منصوب", "مفعول به", "تمييز منصوب"], correct: 0 },
@@ -198,41 +120,21 @@
         const positivePhrases = ["أحسنت يا بطل! 🌟", "إجابة رائعة 👏", "واصل التميز ⭐", "عبقري وذكي جداً! 🎯"];
         const encouragePhrases = ["لا بأس، خيرها في غيرها 🌷", "حاول مرة أخرى، فأنت تتقدم خطوة خطوة ⭐", "الاجتهاد طريق التعلم 💡"];
 
-        rootRef.on("value", (snapshot) => {
-            const data = snapshot.val();
-            const tbody = document.getElementById("results-table-body");
-            if (!data) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن في السيرفر...</td></tr>`;
-                return;
-            }
-            let html = "";
-            Object.keys(data).reverse().forEach(key => {
-                const item = data[key];
-                html += `<tr class="hover:bg-slate-50/50 transition">
-                    <td class="p-4 font-bold text-slate-800 border-l text-right">${item.name}</td>
-                    <td class="p-4 text-center font-extrabold text-blue-600 border-l">${item.score} / ${item.totalPossible}</td>
-                    <td class="p-4 text-center border-l"><span class="px-2 py-1 rounded bg-amber-50 text-amber-700 text-xs font-bold">${item.percent}% (${item.grade})</span></td>
-                    <td class="p-4 text-center text-[10px] sm:text-xs text-slate-400" dir="ltr">${item.timestamp}</td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
-        });
-
         function startStudentQuiz() {
             const nameInput = document.getElementById("student-name-input").value.trim();
             if (!nameInput) return alert("فضلاً أدخل اسمك الكريم أولاً للانضمام للمسابقة");
             
-            // تصفير وتنظيف كامل للمتغيرات العامة لمنع تداخل قيم الطلاب السابقين حركياً
             pName = nameInput;
             currentQIdx = 0;
             score = 0;
             correctCount = 0;
             isAnsweringBlocked = false;
-            currentAccessRole = "student";
 
             document.getElementById("quiz-player-name").innerText = `المتسابق: ${pName}`;
             document.getElementById("quiz-score").innerText = `الدرجة الحالية: 0`;
-            switchView("quiz-view");
+            
+            document.getElementById("student-login-view").classList.add("hidden");
+            document.getElementById("quiz-view").classList.remove("hidden");
             showQuestion();
         }
 
@@ -302,7 +204,7 @@
             const percent = Math.round((score / totalPossible) * 100);
             
             let grade = "تحتاج محاولة";
-            let iconHtml = `<i class="fas fa-heart text-6xl text-rose-400 mb-4 animate-bounce"></i>`; // أيقونة تربوية مشجعة عوضاً عن الكأس عند المحاولة
+            let iconHtml = `<i class="fas fa-heart text-6xl text-rose-400 mb-4 animate-bounce"></i>`;
             let title = "بداية جيدة، واصل التعلم 🌷";
             let subtitle = "الاجتهاد طريق التعلم، حاول مجدداً لتتقدم وتكسب الخبرة.";
 
@@ -330,7 +232,8 @@
             if (percent >= 50) gBadge.className = "font-extrabold text-base sm:text-xl text-green-600";
             else gBadge.className = "font-extrabold text-base sm:text-xl text-red-500";
 
-            switchView("result-view");
+            document.getElementById("quiz-view").classList.add("hidden");
+            document.getElementById("result-view").classList.remove("hidden");
 
             const now = new Date();
             const timeStr = now.toLocaleTimeString('ar-SA') + " - " + now.toLocaleDateString('ar-SA');
@@ -344,13 +247,11 @@
             });
         }
 
-        // الحساب اللحظي المباشر والأيقونات التكيفية المتطابقة ميكانيكياً لمنع تراكم الذاكرة (حل الصورة النهائي)
         function copyQuizResultReport() {
             const cardPercentText = document.getElementById("res-card-percent").innerText;
             const percent = parseInt(cardPercentText) || 0;
             const cardName = document.getElementById("res-card-name").innerText;
             const cardCount = document.getElementById("res-card-count").innerText;
-            
             let reportText = "";
             
             if (percent >= 90) {
@@ -368,87 +269,10 @@
             });
         }
 
-        function switchToJudgeView() {
-            currentAccessRole = "judge";
-            switchView("judge-view");
-        }
-
-        function clearAllResults() {
-            if (confirm("هل أنت متأكد من مسح جميع سجلات ونتائج الطلاب المخزنة في السيرفر نهائياً؟")) {
-                rootRef.set(null);
-            }
-        }
-
-        function openSettingsArea() {
-            switchView("settings-view");
-        }
-
-        function handleBackAction() {
-            if (viewHistory.length > 1) {
-                viewHistory.pop();
-                const prevView = viewHistory[viewHistory.length - 1];
-                executeViewSwitchLogic(prevView, false);
-            } else {
-                goToHome();
-            }
-        }
-
-        function goToHome() {
+        function restartQuizProcess() {
             document.getElementById("student-name-input").value = "";
-            viewHistory = ['welcome-view'];
-            currentAccessRole = "guest";
-            executeViewSwitchLogic("welcome-view", false);
-        }
-
-        function switchView(viewId) {
-            executeViewSwitchLogic(viewId, true);
-        }
-
-        function executeViewSwitchLogic(viewId, pushToHistory) {
-            if (pushToHistory && viewHistory[viewHistory.length - 1] !== viewId) {
-                viewHistory.push(viewId);
-            }
-            ["welcome-view", "student-login-view", "quiz-view", "result-view", "judge-view", "settings-view"].forEach(id => {
-                document.getElementById(id).classList.add("hidden");
-            });
-            document.getElementById(viewId).classList.remove("hidden");
-            
-            const navBadge = document.getElementById("nav-role");
-            const homeBtn = document.getElementById("global-home-btn");
-            const backBtn = document.getElementById("global-back-btn");
-            const settingsBtn = document.getElementById("global-settings-btn");
-            
-            if (currentAccessRole === "student") {
-                navBadge.innerText = "مسار المتسابق الآمن";
-                navBadge.className = "text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg block";
-                homeBtn.classList.add("hidden");
-                backBtn.classList.add("hidden");
-                settingsBtn.classList.add("hidden");
-                return;
-            }
-            if (viewId === 'judge-view') {
-                navBadge.innerText = "لوحة المشرف";
-                navBadge.className = "text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg block";
-                homeBtn.classList.remove("hidden");
-                backBtn.classList.remove("hidden");
-                settingsBtn.classList.remove("hidden");
-            } else if (viewId === 'settings-view') {
-                navBadge.innerText = "الإعدادات";
-                navBadge.className = "text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-lg block";
-                homeBtn.classList.remove("hidden");
-                backBtn.className = "text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition block";
-                settingsBtn.classList.add("hidden");
-            } else if (viewId === 'student-login-view' || viewId === 'result-view') {
-                navBadge.classList.add("hidden");
-                homeBtn.className = "text-slate-500 hover:text-blue-600 p-2 text-xl transition block";
-                backBtn.className = "text-slate-500 hover:text-slate-700 font-bold text-sm flex items-center gap-1 ml-2 transition block";
-                settingsBtn.classList.add("hidden");
-            } else {
-                navBadge.classList.add("hidden");
-                homeBtn.classList.add("hidden");
-                backBtn.classList.add("hidden");
-                settingsBtn.classList.add("hidden");
-            }
+            document.getElementById("result-view").classList.add("hidden");
+            document.getElementById("student-login-view").classList.remove("hidden");
         }
     </script>
 </body>
