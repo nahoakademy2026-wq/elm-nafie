@@ -9,13 +9,12 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght=400;500;700&display=swap');
         body { font-family: 'Tajawal', sans-serif; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
-    <!-- شريط التنقل العلوي الذكي -->
     <header class="bg-white shadow-sm p-4 border-b border-slate-100 sticky top-0 z-50">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center px-4 gap-2">
             <div class="flex items-center gap-2">
@@ -42,7 +41,6 @@
 
     <main class="container mx-auto px-4 py-8 flex-grow flex items-center justify-center">
         
-        <!-- 1. واجهة الترحيب وفصل المسارات -->
         <div id="welcome-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-graduation-cap text-6xl text-blue-500 mb-4"></i>
             <h2 class="text-xl font-bold mb-2 text-slate-800">مرحباً بكم في منصة علم نافع</h2>
@@ -57,7 +55,6 @@
             </div>
         </div>
 
-        <!-- واجهة بوابة الرمز السري لقسم المشرف -->
         <div id="judge-auth-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-lock text-5xl text-purple-600 mb-4"></i>
             <h2 class="text-lg font-bold mb-2 text-slate-800">منطقة خاصة بالمشرفين</h2>
@@ -69,7 +66,6 @@
             </div>
         </div>
 
-        <!-- 2. واجهة تسجيل اسم الطالب المعزولة والآمنة -->
         <div id="student-login-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <i class="fas fa-user-circle text-5xl text-blue-500 mb-4"></i>
             <h2 class="text-lg font-bold mb-6 text-slate-700">تسجيل اسم المتسابق الكريم</h2>
@@ -79,7 +75,6 @@
             </button>
         </div>
 
-        <!-- 3. واجهة المسابقة والأسئلة والتفاعل للمتسابِق -->
         <div id="quiz-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
                 <span id="quiz-player-name" class="font-bold text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full text-sm"></span>
@@ -98,13 +93,12 @@
             </div>
         </div>
 
-        <!-- 4. بطاقة الشهادة التكيفية (مصلحة بالكامل ومطابقة للجزء أ بالرموز التعبيرية والعبارات) -->
         <div id="result-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <div id="badge-container"></div>
             <h2 id="result-title" class="text-2xl font-bold mb-2 text-slate-800"></h2>
             <p id="result-subtitle" class="text-slate-500 mb-6"></p>
             
-            <div class="bg-slate-50 p-6 rounded-2xl mb-6 border border-slate-100 text-right space-y-3">
+            <div class="bg-slate-50 p-6 rounded-2xl mb-4 border border-slate-100 text-right space-y-3">
                 <div class="flex justify-between border-b pb-2">
                     <span class="text-slate-500 text-sm">اسم المتسابق:</span>
                     <span id="res-card-name" class="font-bold text-slate-800 text-sm"></span>
@@ -123,6 +117,10 @@
                 </div>
             </div>
 
+            <button id="explicit-save-btn" onclick="saveResultToFirebaseExplicitly()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-base shadow-md mb-4 flex items-center justify-center gap-2 animate-bounce">
+                <i class="fas fa-cloud-upload-alt"></i> اضغط هنا لـ حِفْظ النتيجة في السيرفر 💾
+            </button>
+
             <div class="grid grid-cols-2 gap-2 mb-3">
                 <button onclick="directSwitch('student-login-view')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm flex items-center justify-center gap-2">
                     <i class="fas fa-redo-alt"></i> إعادة المحاولة
@@ -136,7 +134,6 @@
             </button>
         </div>
 
-        <!-- 5. لوحة إدارة ومراقبة النتائج حياً (تم تفعيل وتنشيط العناوين للفرز والترتيب وإصلاح الجلب 100%) -->
         <div id="judge-view" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-3xl">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
                 <h2 class="text-xl font-bold text-purple-700 flex items-center gap-2">
@@ -156,7 +153,6 @@
                 <table class="w-full text-right border-collapse">
                     <thead>
                         <tr class="bg-slate-50 text-slate-700 border-b border-slate-100 select-none">
-                            <!-- تحويل العناوين لعناصر تفاعلية ونشطة للفرز والترتيب (Active Components) -->
                             <th onclick="toggleSort('name')" class="p-4 font-bold text-xs sm:text-sm border-l cursor-pointer hover:bg-slate-100 transition text-right">
                                 اسم المتسابق <i class="fas fa-sort text-slate-400 text-[10px] mr-1"></i>
                             </th>
@@ -178,7 +174,6 @@
             </div>
         </div>
 
-        <!-- 6. واجهة خيارات الإعدادات والصلاحيات المباشرة -->
         <div id="settings-view" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
             <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
                 <i class="fas fa-cog"></i>
@@ -212,7 +207,7 @@
         let isAnsweringBlocked = false;
         let currentAccessRole = "guest";
         
-        let studentsDataList = []; // مصفوفة لحفظ البيانات محلياً لتفعيل الفرز والترتيب الحقيقي
+        let studentsDataList = [];
         let currentSortKey = "rawTime";
         let isSortAscending = false;
 
@@ -225,7 +220,6 @@
         const positivePhrases = ["أحسنت يا بطل! 🌟", "إجابة رائعة 👏", "واصل التميز ⭐", "عبقري وذكي جداً! 🎯"];
         const encouragePhrases = ["لا بأس، خيرها في غيرها 🌷", "حاول مرة أخرى، فأنت تتقدم خطوة خطوة ⭐", "الاجتهاد طريق التعلم 💡"];
 
-        // دالة الاستماع والربط السحابي (مصلحة 100% لبناء وحقن الأسطر حياً بالجدول)
         rootRef.on("value", (snapshot) => {
             const data = snapshot.val();
             studentsDataList = [];
@@ -248,13 +242,12 @@
             sortAndRenderTable();
         });
 
-        // دالة الفرز والترتيب التفاعلي الحقيقي عند الضغط على العناوين
         function toggleSort(key) {
             if (currentSortKey === key) {
                 isSortAscending = !isSortAscending;
             } else {
                 currentSortKey = key;
-                isSortAscending = (key === "name"); // الترتيب الافتراضي أبجدي للأسماء وتنازلي للأرقام
+                isSortAscending = (key === "name");
             }
             sortAndRenderTable();
         }
@@ -275,7 +268,7 @@
         function renderTableRecords() {
             const tbody = document.getElementById("results-table-body");
             if (studentsDataList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن في السيرفر... بانتظار دخول الطلاب.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">لا توجد محاولات مسجلة حتى الآن في السيرفر... بانتظار دخول الطلاب وضغطهم على زر الحفظ.</td></tr>`;
                 return;
             }
             let html = "";
@@ -417,24 +410,50 @@
             if (percent >= 50) gBadge.className = "font-extrabold text-base sm:text-xl text-green-600";
             else gBadge.className = "font-extrabold text-base sm:text-xl text-red-500";
 
-            directSwitch("result-view");
+            // تفعيل زر الحفظ وإعادته للوضع النشط
+            const saveBtn = document.getElementById("explicit-save-btn");
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = `<i class="fas fa-cloud-upload-alt"></i> اضغط هنا لـ حِفْظ النتيجة في السيرفر 💾`;
+            saveBtn.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-base shadow-md mb-4 flex items-center justify-center gap-2 animate-bounce";
 
+            directSwitch("result-view");
+        }
+
+        // دالة الحفظ الصريحة والآمنة بناءً على فكرتك العبقرية لقطع الشك باليقين
+        function saveResultToFirebaseExplicitly() {
+            const totalPossible = quizQuestions.length * 10;
+            const percent = Math.round((score / totalPossible) * 100);
+            const gBadge = document.getElementById("res-card-grade").innerText;
+            
             const now = new Date();
             const timeStr = now.toLocaleTimeString('ar-SA') + " - " + now.toLocaleDateString('ar-SA');
             const rawTimeVal = Date.now();
             
+            const saveBtn = document.getElementById("explicit-save-btn");
+            saveBtn.disabled = true;
+            saveBtn.className = "w-full bg-slate-400 text-white font-bold py-3.5 px-4 rounded-xl cursor-not-allowed text-base mb-4 flex items-center justify-center gap-2 animate-none";
+            saveBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري إرسال البيانات وحقنها بالسيرفر الموحد...`;
+
             rootRef.push({
                 name: pName,
                 score: score,
                 totalPossible: totalPossible,
                 percent: percent,
-                grade: grade,
+                grade: gBadge,
                 timestamp: timeStr,
                 rawTime: rawTimeVal
+            }).then(() => {
+                saveBtn.innerHTML = `<i class="fas fa-check-circle"></i> تم الحفظ بنجاح وتحديث لوحة المشرف! ✅`;
+                saveBtn.className = "w-full bg-green-500 text-white font-bold py-3.5 px-4 rounded-xl cursor-not-allowed text-base mb-4 flex items-center justify-center gap-2";
+                alert("تم إرسال وحفظ بيانات محاولتك صراحة داخل السيرفر السحابي بنجاح مالي 100%! يمكن للمشرف الآن رؤيتها وفرزها.");
+            }).catch((err) => {
+                saveBtn.disabled = false;
+                saveBtn.className = "w-full bg-red-600 text-white font-bold py-3.5 px-4 rounded-xl text-base mb-4";
+                saveBtn.innerHTML = `فشل الحفظ، أعد المحاولة 🔄`;
+                alert("تعذر الحفظ، يرجى التحقق من اتصال الإنترنت: " + err.message);
             });
         }
 
-        // استعادة وإصلاح نظام التقرير التكيفي الشامل والرموز التعبيرية والعبارات التربوية 100% (مطابقة للجزء أ)
         function copyQuizResultReport() {
             const cardPercentText = document.getElementById("res-card-percent").innerText;
             const percent = parseInt(cardPercentText) || 0;
