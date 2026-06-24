@@ -10,6 +10,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
+    <!-- نافذة طلب كلمة المرور للمشرف -->
     <div id="password-modal" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl border-t-4 border-purple-700 space-y-4">
             <h3 class="text-lg font-bold text-purple-900 text-center">🔐 دخول المشرف</h3>
@@ -22,6 +23,7 @@
         </div>
     </div>
 
+    <!-- رأس الصفحة -->
     <header class="bg-white shadow-sm border-b border-gray-200 py-4 px-6 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <h1 class="text-xl font-bold text-gray-900">📑 مسابقة علم نافع في القرآن الكريم</h1>
@@ -34,8 +36,10 @@
 
     <main class="flex-grow max-w-3xl w-full mx-auto p-4 sm:p-6 space-y-6">
         
+        <!-- شاشة المتسابق (م1 - أزرق) -->
         <div id="section-player" class="space-y-6">
             
+            <!-- الخطوة 1: إدخال اسم المتسابق لبدء التحدي -->
             <div id="player-start-card" class="border-t-4 border-blue-600 bg-white rounded-xl shadow-sm p-6 space-y-4">
                 <h2 class="text-lg font-bold text-blue-900 flex items-center gap-2">📝 تسجيل اسم المتسابق</h2>
                 <p class="text-xs text-gray-500">ملاحظة: لن يتم اعتماد أو حفظ أي نتيجة في لوحة الحكم إلا بعد إكمال الاختبار والإجابة على الأسئلة بالكامل.</p>
@@ -47,6 +51,7 @@
                 </div>
             </div>
 
+            <!-- الخطوة 2: حاوية الأسئلة المتتابعة -->
             <div id="quiz-container" class="border-t-4 border-blue-600 bg-white rounded-xl shadow-sm p-6 space-y-6 hidden">
                 <div class="flex justify-between items-center bg-blue-50 p-3 rounded-lg text-xs font-bold text-blue-900">
                     <div>المتسابق: <span id="current-player-display" class="text-blue-700"></span></div>
@@ -58,8 +63,7 @@
                     <h3 id="question-text" class="text-base sm:text-lg font-bold text-gray-900 pt-1"></h3>
                 </div>
 
-                <div id="options-grid" class="grid grid-cols-1 gap-3">
-                    </div>
+                <div id="options-grid" class="grid grid-cols-1 gap-3"></div>
 
                 <div id="feedback-area" class="space-y-3 hidden">
                     <div id="feedback-message" class="p-3 rounded-lg text-sm font-bold text-center"></div>
@@ -69,13 +73,75 @@
                 </div>
             </div>
 
+            <!-- الخطوة 3: صفحة النتيجة النهائية وبطاقة النجاح الاحترافية -->
+            <div id="result-card" class="border-t-4 border-green-500 bg-white rounded-xl shadow-xl p-6 space-y-6 hidden text-center animate-fade-in">
+                <div class="space-y-2">
+                    <span class="text-5xl" id="result-badge-emoji">🎓</span>
+                    <h2 class="text-2xl font-bold text-green-900" id="result-greeting-title">تهانينا الحارة!</h2>
+                    <p class="text-gray-600 text-sm">لقد أتممت مسابقة علم نافع في القرآن الكريم بنجاح</p>
+                </div>
+
+                <!-- لوحة عرض الأرقام والتقدير -->
+                <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold text-gray-500 block">المتسابق الكريم</span>
+                        <span id="res-player-name" class="text-base font-bold text-gray-900"></span>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold text-gray-500 block">التقدير العام</span>
+                        <span id="res-player-rating" class="text-base font-bold text-green-700"></span>
+                    </div>
+                    <div class="space-y-1 border-t border-gray-200 pt-2">
+                        <span class="text-xs font-bold text-gray-500 block">الدرجة النهائية</span>
+                        <span id="res-player-score" class="text-lg font-bold text-blue-600"></span>
+                    </div>
+                    <div class="space-y-1 border-t border-gray-200 pt-2">
+                        <span class="text-xs font-bold text-gray-500 block">النسبة المئوية</span>
+                        <span id="res-player-percent" class="text-lg font-bold text-purple-700"></span>
+                    </div>
+                </div>
+
+                <!-- الرسالة التشجيعية التربوية المتغيرة -->
+                <div id="res-educational-msg" class="p-4 rounded-xl text-sm font-medium leading-relaxed"></div>
+
+                <!-- حزمة الأزرار المطلوبة لتجربة مستخدم متميزة -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <button onclick="saveAndPushResult()" id="btn-save-result" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow transition flex items-center justify-center gap-2">
+                        💾 حفظ النتيجة وإرسالها للمشرف
+                    </button>
+                    <button onclick="shareResultCard()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow transition flex items-center justify-center gap-2">
+                        🔗 مشاركة النتيجة (واتساب)
+                    </button>
+                    <button onclick="restartQuiz()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2.5 px-4 rounded-lg transition sm:col-span-1">
+                        🔄 إعادة المحاولة
+                    </button>
+                    <button onclick="goHome()" class="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-2.5 px-4 rounded-lg transition sm:col-span-1">
+                        🏠 العودة للرئيسية
+                    </button>
+                </div>
+            </div>
+
         </div>
 
+        <!-- شاشة الحكم والمشرف (م2 - أرجواني) -->
         <div id="section-judge" class="space-y-6 hidden">
             <div class="border-t-4 border-purple-700 bg-white rounded-xl shadow-sm p-6 space-y-4">
                 <h2 class="text-lg font-bold text-purple-900">⚖️ لوحة تحكم وفحص نتائج المتسابقين</h2>
-                <div class="p-4 bg-gray-50 border rounded-lg text-sm text-gray-500 text-center" id="judge-master-table">
-                    لوحة الإدارة الشاملة (سيتم تفعيل استقبال الدرجات والربط والحفظ في خطوتنا القادمة).
+                <div class="overflow-x-auto rounded-xl border border-gray-200">
+                    <table class="w-full text-right border-collapse bg-white">
+                        <thead>
+                            <tr class="bg-purple-700 text-white text-xs font-bold">
+                                <th class="p-3">المتسابق</th>
+                                <th class="p-3 text-center">الدرجة</th>
+                                <th class="p-3 text-center">النسبة</th>
+                                <th class="p-3 text-center">التقدير</th>
+                            </tr>
+                        </thead>
+                        <tbody id="judge-master-table-body" class="text-sm divide-y divide-gray-100">
+                            <!-- التعبئة التلقائية بعد ضغط زر الحفظ للطلاب -->
+                            <tr><td colspan="4" class="p-4 text-center text-gray-400 bg-gray-50">لا توجد محاولات محفوظة حتى الآن.</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -83,7 +149,6 @@
     </main>
 
     <script>
-        // الخيار الثاني: المصفوفة المرنة والجاهزة تماماً للاستدعاء السحابي أو الربط بملفات الـ PDF مستقبلاً
         const quizQuestions = [
             {
                 id: 1,
@@ -91,7 +156,7 @@
                 question: "ما هو الوجه الإعرابي الصحيح لكلمة 'حديثُ' في قوله تعالى: {هَلْ أَتَاكَ حَدِيثُ غَاشِيَةِ}؟",
                 options: ["فاعل مرفوع بالضمة", "مفعول به منصوب", "مبتدأ مؤخر", "مضاف إليه مجرور"],
                 correctIndex: 0,
-                feedback: "أحسنت! 'حديثُ' فاعل مرفوع بالضمة الظاهرة وهو مضاف، والفاعل هنا هو الذي أتى."
+                feedback: "إجابة صحيحة ✅حديثُ: فاعل مرفوع بالضمة الظاهرة وهو مضاف، والفاعل هنا هو الذي أتى."
             },
             {
                 id: 2,
@@ -99,7 +164,7 @@
                 question: "ما المعنى اللغوي الدقيق لكلمة 'عسْعَسَ' في قوله تعالى: {وَاللَّيْلِ إِذَا عَسْعَسَ}؟",
                 options: ["أقبل وظلمته", "أدبر وولى", "اشتد برده", "أقبل أو أدبر (من الأضداد)"],
                 correctIndex: 3,
-                feedback: "ممتاز! 'عسعس' من كلمات الأضداد في لغة العرب، وتطلق على إقبال الليل بظلامه أو إدباره."
+                feedback: "إجابة صحيحة ✅الصواب هو: أقبل أو أدبر، وهو من كلمات الأضداد الفصيحة في لغة العرب."
             },
             {
                 id: 3,
@@ -107,30 +172,25 @@
                 question: "في قوله تعالى: {وَفَجَّرْنَا الْأَرْضَ عُيُوناً}، ما إعراب كلمة 'عُيُوناً'؟",
                 options: ["حال منصوبة", "مفعول لأجله", "تمييز محول عن مفعول به", "مفعول مطلق"],
                 correctIndex: 2,
-                feedback: "بارك الله فيك! 'عيوناً' تمييز منصوب محول عن المفعول به، والأصل: وفجرنا عيون الأرض."
+                feedback: "إجابة صحيحة ✅عيوناً: تمييز منصوب محول عن المفعول به، والأصل: وفجرنا عيون الأرض."
             }
         ];
 
-        // حالة التطبيق المؤقتة لإدارة سير الاختبار
         let currentQuestionIndex = 0;
-        let userAnswers = [];
+        let score = 0;
         let currentUserName = "";
         let hasAnsweredCurrent = false;
         const ADMIN_PASSWORD = "1234";
 
-        // إدارة النوافذ المشروطة والأدوار
         function showModal() { document.getElementById('password-modal').classList.remove('hidden'); }
         function closeModal() { document.getElementById('password-modal').classList.add('hidden'); }
         
         function checkPassword() {
-            const pass = document.getElementById('admin-pass').value;
-            if (pass === ADMIN_PASSWORD) {
+            if (document.getElementById('admin-pass').value === ADMIN_PASSWORD) {
                 closeModal();
                 switchRole('judge');
                 document.getElementById('admin-pass').value = '';
-            } else {
-                alert('كلمة المرور غير صحيحة!');
-            }
+            } else { alert('كلمة المرور غير صحيحة!'); }
         }
 
         function switchRole(role) {
@@ -149,28 +209,25 @@
                 btnPlayer.className = "px-4 py-1.5 rounded-md text-sm font-semibold text-gray-600";
                 secPlayer.classList.add('hidden');
                 secJudge.classList.remove('hidden');
+                renderJudgeTable();
             }
         }
 
-        // بدء الاختبار بعد التحقق من الاسم
         function startQuiz() {
             const nameInput = document.getElementById('player-name-input').value.trim();
-            if (!nameInput) {
-                alert("لطفاً، يرجى كتابة اسم المتسابق أولاً لبدء المسابقة!");
-                return;
-            }
+            if (!nameInput) { alert("لطفاً، يرجى كتابة اسم المتسابق أولاً لبدء المسابقة!"); return; }
             currentUserName = nameInput;
             currentQuestionIndex = 0;
-            userAnswers = [];
+            score = 0;
             
             document.getElementById('current-player-display').innerText = currentUserName;
             document.getElementById('player-start-card').classList.add('hidden');
             document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('result-card').classList.add('hidden');
             
             loadQuestion();
         }
 
-        // تحميل وتوليد السؤال الحالي من المصفوفة المرنة
         function loadQuestion() {
             hasAnsweredCurrent = false;
             document.getElementById('feedback-area').classList.add('hidden');
@@ -186,69 +243,178 @@
             qData.options.forEach((option, index) => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-right p-3.5 rounded-xl border-2 border-gray-100 hover:border-blue-200 hover:bg-blue-50/50 text-sm font-semibold transition flex items-center justify-between group";
-                btn.innerHTML = `<span>${option}</span> <span class="opacity-0 group-hover:opacity-100 transition text-blue-500"> اختر 🎯</span>`;
+                btn.innerHTML = `<span>${option}</span>`;
                 btn.onclick = () => handleOptionSelection(index, btn);
                 optionsGrid.appendChild(btn);
             });
         }
 
-        // معالجة اختيار الإجابة وتقديم التغذية الراجعة الفورية الملونة
         function handleOptionSelection(selectedIndex, clickedBtn) {
-            if (hasAnsweredCurrent) return; // منع التغيير بعد الاختيار الأول
+            if (hasAnsweredCurrent) return;
             hasAnsweredCurrent = true;
             
             const qData = quizQuestions[currentQuestionIndex];
             const isCorrect = (selectedIndex === qData.correctIndex);
+            if (isCorrect) score++;
             
-            // حفظ الإجابة المسجلة
-            userAnswers.push({ questionId: qData.id, isCorrect: isCorrect });
-            
-            const optionsGrid = document.getElementById('options-grid');
-            const buttons = optionsGrid.getElementsByTagName('button');
-            
-            // تلوين الإجابات لتأكيد النتيجة بصرياً للمتسابق
+            const buttons = document.getElementById('options-grid').getElementsByTagName('button');
             for (let i = 0; i < buttons.length; i++) {
                 if (i === qData.correctIndex) {
                     buttons[i].className = "w-full text-right p-3.5 rounded-xl border-2 border-green-500 bg-green-50 text-green-900 text-sm font-bold flex items-center justify-between";
-                    buttons[i].innerHTML += "<span>✅ إجابة صحيحة</span>";
+                    buttons[i].innerHTML += "<span>إجابة صحيحة ✅</span>";
                 } else if (i === selectedIndex && !isCorrect) {
                     buttons[i].className = "w-full text-right p-3.5 rounded-xl border-2 border-red-500 bg-red-50 text-red-900 text-sm font-bold flex items-center justify-between";
-                    buttons[i].innerHTML += "<span>❌ إجابتك</span>";
+                    buttons[i].innerHTML += "<span>للأسف، الإجابة غير موفقة ❌</span>";
                 } else {
                     buttons[i].className = "w-full text-right p-3.5 rounded-xl border border-gray-200 text-gray-400 text-sm opacity-60";
                 }
             }
             
-            // إظهار نص التغذية الراجعة المخصص
             const feedbackMsg = document.getElementById('feedback-message');
             if (isCorrect) {
                 feedbackMsg.className = "p-3 rounded-lg text-sm font-bold text-center bg-green-100 text-green-800";
                 feedbackMsg.innerText = qData.feedback;
             } else {
                 feedbackMsg.className = "p-3 rounded-lg text-sm font-bold text-center bg-red-100 text-red-800";
-                feedbackMsg.innerText = `للأسف إجابة غير موفقة. الصواب هو: (${qData.options[qData.correctIndex]}).`;
+                feedbackMsg.innerText = `للأسف تعثرت هنا. هداك الله للحق وصوابها هو: (${qData.options[qData.correctIndex]})`;
             }
             
-            // تغيير نص زر التنقل إذا كان السؤال الأخير
-            const btnNext = document.getElementById('btn-next');
-            if (currentQuestionIndex === quizQuestions.length - 1) {
-                btnNext.innerText = "عرض النتيجة النهائية وبطاقة النجاح 🎓";
-            } else {
-                btnNext.innerText = "السؤال التالي ➡️";
-            }
-            
+            document.getElementById('btn-next').innerText = currentQuestionIndex === quizQuestions.length - 1 ? "عرض النتيجة النهائية وبطاقة النجاح 🎓" : "السؤال التالي ➡️";
             document.getElementById('feedback-area').classList.remove('hidden');
         }
 
-        // الانتقال التتابعي عبر المصفوفة
         function nextQuestion() {
             if (currentQuestionIndex < quizQuestions.length - 1) {
                 currentQuestionIndex++;
                 loadQuestion();
             } else {
-                // انتهاء الأسئلة بالكامل والتحول مستقبلاً لبطاقة النجاح وحساب النسبة
-                alert(`رائع جداً يا ${currentUserName}! لقد أتممت الإجابة على كافة الأسئلة بنجاح وجاهز للانتقال لبطاقة النتيجة والربط السحابي.`);
+                showFinalResultCard();
             }
+        }
+
+        // حساب وإظهار بطاقة النجاح الاحترافية والتقديرات تربوياً
+        function showFinalResultCard() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('result-card').classList.remove('hidden');
+            
+            const total = quizQuestions.length;
+            const percentage = Math.round((score / total) * 100);
+            
+            let rating = "";
+            let msg = "";
+            let emoji = "";
+            let bgMsgClass = "";
+
+            if (percentage === 100) {
+                rating = "ممتاز 👑";
+                emoji = "🏆";
+                msg = `ما شاء الله تبارك الله يا ${currentUserName}! فتح الله عليك فتوح العارفين، نتيجة مبهرة وإجابات ناصعة تدل على وعيك القرآني المتميز. استمر في طلب العلم النافع!`;
+                bgMsgClass = "bg-green-50 text-green-800 border border-green-200";
+            } else if (percentage >= 70) {
+                rating = "جيد جداً ✨";
+                emoji = "🌟";
+                msg = `بوركت جهودك الطيبة يا ${currentUserName}. خطوت خطوات رائعة ولديك تمكن متين من قواعد اللغة والتفسير، وقريب جداً من القمة المكتملة.`;
+                bgMsgClass = "bg-blue-50 text-blue-800 border border-blue-200";
+            } else {
+                rating = "جيد ومحاولة مباركة 📚";
+                emoji = "📖";
+                msg = `محاولة مقدرة يا ${currentUserName}. المسابقة محطة مهمة للتعلم والازدياد، وقراءة علل التحرير والتصحيح المرفقة ستجعلك متفوقاً في المرات القادمة بلا شك.`;
+                bgMsgClass = "bg-amber-50 text-amber-800 border border-amber-200";
+            }
+
+            document.getElementById('result-badge-emoji').innerText = emoji;
+            document.getElementById('res-player-name').innerText = currentUserName;
+            document.getElementById('res-player-rating').innerText = rating;
+            document.getElementById('res-player-score').innerText = `${score} من ${total}`;
+            document.getElementById('res-player-percent').innerText = `${percentage}%`;
+            
+            const msgBox = document.getElementById('res-educational-msg');
+            msgBox.innerText = msg;
+            msgBox.className = `p-4 rounded-xl text-sm font-medium leading-relaxed ${bgMsgClass}`;
+            
+            // تفعيل الزر مجدداً
+            document.getElementById('btn-save-result').disabled = false;
+            document.getElementById('btn-save-result').innerText = "💾 حفظ النتيجة وإرسالها للمشرف";
+        }
+
+        // نسخ نص بطاقة المشاركة الاحترافية لواتساب
+        function shareResultCard() {
+            const total = quizQuestions.length;
+            const percentage = Math.round((score / total) * 100);
+            let rating = percentage === 100 ? "ممتاز 👑" : percentage >= 70 ? "جيد جداً ✨" : "جيد 📚";
+            
+            const shareText = 
+`🏆 *بطاقة تفوق في مسابقة علم نافع القرآني* 🏆
+
+👤 *المتسابق الكريم:* ${currentUserName}
+📊 *الدرجة المستحقة:* ${score} من ${total}
+📈 *النسبة المئوية:* ${percentage}%
+🏅 *التقدير العام:* ${rating}
+
+🌿 _قال تعالى: {وَقُل رَّبِّ زِدْنِي عِلْماً}_
+مبارك التميز في رحاب إعراب وبيان آيات الذكر الحكيم! 🎓✨`;
+
+            navigator.clipboard.writeText(shareText).then(() => {
+                alert("✅ تم نسخ نص بطاقة النجاح المنسق بنجاح! يمكنك الآن الذهاب لتطبيق الواتساب ولصقها لمشاركتها فوراً.");
+            }).catch(() => {
+                alert("عذراً، لم نتمكن من النسخ التلقائي، يرجى نسخ النتيجة يدوياً.");
+            });
+        }
+
+        // حفظ النتيجة الفورية وربطها تلقائياً بلوحة المشرف
+        function saveAndPushResult() {
+            const total = quizQuestions.length;
+            const percentage = Math.round((score / total) * 100);
+            let rating = percentage === 100 ? "ممتاز 👑" : percentage >= 70 ? "جيد جداً ✨" : "جيد 📚";
+
+            let currentCloudData = JSON.parse(localStorage.getItem('challenge_state') || '[]');
+            
+            // منع التكرار لنفس الطالب في نفس الجلسة
+            currentCloudData.push({
+                name: currentUserName,
+                score: `${score} من ${total}`,
+                percent: `${percentage}%`,
+                rating: rating
+            });
+
+            localStorage.setItem('challenge_state', JSON.stringify(currentCloudData));
+            
+            const saveBtn = document.getElementById('btn-save-result');
+            saveBtn.innerText = "✅ تم الحفظ والربط بنجاح";
+            saveBtn.disabled = true;
+            alert("🔒 تم تسجيل وحفظ نتيجتك وبثها فوريًا إلى لوحة فحص الإدارة التابعة للمشرف.");
+        }
+
+        function renderJudgeTable() {
+            const data = JSON.parse(localStorage.getItem('challenge_state') || '[]');
+            const tbody = document.getElementById('judge-master-table-body');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400 bg-gray-50">لا توجد محاولات محفوظة حتى الآن.</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-purple-50/20 transition text-center";
+                tr.innerHTML = `
+                    <td class="p-3 text-right font-semibold text-gray-900">${item.name}</td>
+                    <td class="p-3 text-blue-600 font-bold">${item.score}</td>
+                    <td class="p-3 text-purple-700 font-mono">${item.percent}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-semibold bg-purple-50 text-purple-700">${item.rating}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function restartQuiz() { startQuiz(); }
+        
+        function goHome() {
+            document.getElementById('player-start-card').classList.remove('hidden');
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('result-card').classList.add('hidden');
+            document.getElementById('player-name-input').value = '';
         }
     </script>
 </body>
