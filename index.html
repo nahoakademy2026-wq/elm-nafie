@@ -18,7 +18,7 @@
     <div id="password-modal" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl border-t-4 border-purple-700 space-y-4">
             <h3 class="text-lg font-bold text-purple-900 text-center">🔐 دخول المشرف</h3>
-            <p class="text-sm text-gray-600 text-center">يرجى إدخل كلمة المرور للوصول للوحة التحكم:</p>
+            <p class="text-sm text-gray-600 text-center">يرجى إدخال كلمة المرور للوصول للوحة التحكم:</p>
             <input type="password" id="admin-pass" class="w-full text-center p-3 rounded-lg border border-purple-200 focus:ring-2 focus:ring-purple-500 outline-none bg-purple-50 font-mono text-lg" placeholder="****">
             <div class="flex gap-2">
                 <button onclick="closeModal()" class="flex-1 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">إلغاء</button>
@@ -83,22 +83,28 @@
                     <p class="text-gray-600 text-sm">لقد أتممت مسابقة علم نافع في القرآن الكريم بنجاح</p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
-                    <div class="space-y-1">
-                        <span class="text-xs font-bold text-gray-500 block">المتسابق الكريم</span>
-                        <span id="res-player-name" class="text-base font-bold text-gray-900"></span>
+                <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200 text-right">
+                    <div class="space-y-1 col-span-2 border-b border-gray-200 pb-2 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs font-bold text-gray-500 block">المتسابق الكريم</span>
+                            <span id="res-player-name" class="text-base font-bold text-gray-900"></span>
+                        </div>
+                        <div class="text-left">
+                            <span class="text-xs font-bold text-gray-500 block">تاريخ ووقت المحاولة</span>
+                            <span id="res-player-time" class="text-xs font-mono font-bold text-gray-600 bg-gray-200/60 px-2 py-0.5 rounded"></span>
+                        </div>
                     </div>
                     <div class="space-y-1">
                         <span class="text-xs font-bold text-gray-500 block">التقدير العام</span>
                         <span id="res-player-rating" class="text-base font-bold text-green-700"></span>
                     </div>
-                    <div class="space-y-1 border-t border-gray-200 pt-2">
-                        <span class="text-xs font-bold text-gray-500 block">الدرجة النهائية</span>
-                        <span id="res-player-score" class="text-lg font-bold text-blue-600"></span>
-                    </div>
-                    <div class="space-y-1 border-t border-gray-200 pt-2">
+                    <div class="space-y-1">
                         <span class="text-xs font-bold text-gray-500 block">النسبة المئوية</span>
                         <span id="res-player-percent" class="text-lg font-bold text-purple-700"></span>
+                    </div>
+                    <div class="space-y-1 border-t border-gray-200 pt-2 col-span-2 text-center">
+                        <span class="text-xs font-bold text-gray-500 block">الدرجة النهائية المستحقة</span>
+                        <span id="res-player-score" class="text-xl font-bold text-blue-600"></span>
                     </div>
                 </div>
 
@@ -171,13 +177,14 @@
             <div class="border-t-4 border-purple-700 bg-white rounded-xl shadow-sm p-6 space-y-4">
                 <h2 class="text-lg font-bold text-purple-900">⚖️ لوحة تحكم وفحص نتائج المتسابقين</h2>
                 <div class="overflow-x-auto rounded-xl border border-gray-200">
-                    <table class="w-full text-right border-collapse bg-white">
+                    <table class="w-full text-right border-collapse bg-white bg-white">
                         <thead>
                             <tr class="bg-purple-700 text-white text-xs font-bold">
                                 <th class="p-3">المتسابق</th>
                                 <th class="p-3 text-center">الدرجة</th>
                                 <th class="p-3 text-center">النسبة</th>
                                 <th class="p-3 text-center">التقدير</th>
+                                <th class="p-3 text-center">وقت المحاولة</th>
                             </tr>
                         </thead>
                         <tbody id="judge-master-table-body" class="text-sm divide-y divide-gray-100">
@@ -216,7 +223,7 @@
             {
                 id: 3,
                 category: "النحو القرآني",
-                question: "في قوله تعالى: {وَفَجَّرْنَا الْأَرْضَ عُيُوناً}، ما إعراب كلمة 'عُيُوناً'؟",
+                question: "في قوله تعالى: {وَفَجَّرْنَا الْأَرْضَ عُيُوناً}، ما إعراب كلمة 'عُيُوناً'?؟",
                 options: ["حال منصوبة", "مفعول لأجله", "تمييز محول عن مفعول به", "مفعول مطلق"],
                 correctIndex: 2,
                 feedback: "إجابة صحيحة ✅ عيوناً: تمييز منصوب محول عن المفعول به، والأصل: وفجرنا عيون الأرض."
@@ -227,6 +234,7 @@
         let score = 0;
         let currentUserName = "";
         let hasAnsweredCurrent = false;
+        let quizCompletionTimeStr = ""; // متغير لحفظ وقت النهاية للمتسابق الحالي
 
         // تهيئة المتغيرات الأمنية والمظهر
         let currentAdminPass = localStorage.getItem('admin_pass') || "1234";
@@ -337,6 +345,7 @@
             currentUserName = nameInput;
             currentQuestionIndex = 0;
             score = 0;
+            quizCompletionTimeStr = "";
             
             document.getElementById('current-player-display').innerText = currentUserName;
             document.getElementById('player-start-card').classList.add('hidden');
@@ -414,6 +423,13 @@
             document.getElementById('quiz-container').classList.add('hidden');
             document.getElementById('result-card').classList.remove('hidden');
             
+            // توليد وحفظ الطابع الزمني الحالي للمتسابق بصيغة عربية منسقة
+            const currentNow = new Date();
+            quizCompletionTimeStr = currentNow.toLocaleString('ar-EG', {
+                year: 'numeric', month: 'numeric', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+
             const total = quizQuestions.length;
             const percentage = Math.round((score / total) * 100);
             
@@ -435,6 +451,7 @@
 
             document.getElementById('result-badge-emoji').innerText = emoji;
             document.getElementById('res-player-name').innerText = currentUserName;
+            document.getElementById('res-player-time').innerText = quizCompletionTimeStr; // عرض الوقت للمتسابق
             document.getElementById('res-player-rating').innerText = rating;
             document.getElementById('res-player-score').innerText = `${score} من ${total}`;
             document.getElementById('res-player-percent').innerText = `${percentage}%`;
@@ -456,6 +473,7 @@
 `🏆 *بطاقة تفوق في مسابقة علم نافع القرآني* 🏆
 
 👤 *المتسابق الكريم:* ${currentUserName}
+📅 *تاريخ المحاولة:* ${quizCompletionTimeStr}
 📊 *الدرجة المستحقة:* ${score} من ${total}
 📈 *النسبة المئوية:* ${percentage}%
 🏅 *التقدير العام:* ${rating}
@@ -464,7 +482,7 @@
 مبارك التميز في رحاب إعراب وبيان آيات الذكر الحكيم! 🎓✨`;
 
             navigator.clipboard.writeText(shareText).then(() => {
-                alert("✅ تم نسخ نص بطاقة النجاح المنسق بنجاح! يمكنك الآن الذهاب لتطبيق الواتساب ولصقها لمشاركتها فوراً.");
+                alert("✅ تم نسخ نص بطاقة النجاح المنسق بنجاح شاميلاً وقت المسابقة! يمكنك الآن لصقها في الواتساب ومشاركتها فوراً.");
             }).catch(() => {
                 alert("عذراً، يرجى نسخ النتيجة يدوياً.");
             });
@@ -482,7 +500,8 @@
                 score: `${score} من ${total}`,
                 percent: `${percentage}%`,
                 rating: rating,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                formattedTime: quizCompletionTimeStr // حفظ الوقت المنسق في قاعدة البيانات السحابية لقسم الحكم
             };
             
             currentCloudData.push(record);
@@ -494,7 +513,7 @@
             const saveBtn = document.getElementById('btn-save-result');
             saveBtn.innerText = "✅ تم الحفظ والربط بنجاح";
             saveBtn.disabled = true;
-            alert("🔒 تم تسجيل وحفظ نتيجتك وبثها فوريًا إلى لوحة فحص الإدارة التابعة للمشرف.");
+            alert("🔒 تم تسجيل وحفظ نتيجتك وبثها فوريًا شاملة الوقت والتاريخ إلى لوحة فحص الإدارة التابعة للمشرف.");
             if(isAdminLoggedIn) renderJudgeTable();
         }
 
@@ -503,7 +522,6 @@
         }
 
         function syncStateFromServer() {
-            // دالة تقوم بمسح وجلب أي تحديثات من المسار الخلفي لمزامنة لوحة المشرف بشكل مجهول دائم
             console.log(`Syncing from pathway endpoint: ${API_STATE_PATH}`);
         }
 
@@ -513,33 +531,40 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400 bg-gray-50">لا توجد محاولات محفوظة حتى الآن.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 bg-gray-50">لا توجد محاولات محفوظة حتى الآن.</td></tr>`;
                 return;
             }
 
-            // ترتيب تنازلي حسب الأحدث
+            // ترتيب تنازلي حسب الأحدث زمنياً
             data.sort((a,b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
 
             data.forEach(item => {
-                // معالجة تقنية ذكية لمنع ظهور undefined في البيانات القديمة
                 let displayPercent = item.percent;
                 let displayRating = item.rating;
 
+                // حماية برمجية دفاعية ضد الحالات القديمة
                 if (!displayPercent || displayPercent === "undefined%") {
-                    // حساب النسبة تلقائياً إذا كانت مفقودة (افتراض أن الاختبار من 3 أسئلة)
                     if (item.score) {
                         const currentScore = parseInt(item.score);
                         const calculatedPercent = Math.round((currentScore / 3) * 100);
                         displayPercent = `${calculatedPercent}%`;
-                        
-                        // تعيين التقدير بناءً على النسبة المحسوبة
                         if (calculatedPercent === 100) displayRating = "ممتاز 👑";
                         else if (calculatedPercent >= 70) displayRating = "جيد جداً ✨";
                         else displayRating = "جيد ومحاولة مباركة 📚";
                     } else {
-                        displayPercent = "---";
-                        displayRating = "مكتمل";
+                        displayPercent = "---"; displayRating = "مكتمل";
                     }
+                }
+
+                // تحديد وقت للعرض في حال كانت البيانات قديمة جداً ولم تسجل وقت محدد مسبقاً
+                let displayTime = item.formattedTime;
+                if (!displayTime && item.timestamp) {
+                    displayTime = new Date(item.timestamp).toLocaleString('ar-EG', {
+                        year: 'numeric', month: 'numeric', day: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+                } else if(!displayTime) {
+                    displayTime = "غير مسجل";
                 }
 
                 const tr = document.createElement('tr');
@@ -549,6 +574,7 @@
                     <td class="p-3 text-blue-600 font-bold">${item.score || '---'}</td>
                     <td class="p-3 text-purple-700 font-mono">${displayPercent}</td>
                     <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-semibold bg-purple-50 text-purple-700">${displayRating}</span></td>
+                    <td class="p-3 text-xs font-mono font-bold text-gray-500">${displayTime}</td>
                 `;
                 tbody.appendChild(tr);
             });
